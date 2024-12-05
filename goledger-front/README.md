@@ -10,7 +10,7 @@
 /* Cada opção do menu 
 - Artista
   |__Sem artista, cadastre um artista 
-  |__ Ou, exibe lista de artistas (nome, País de origem, botão ver albums),  
+  |__ Ou, exibe lista de artistas (nome, País de origem, botão ver albums (tempo?)),  
       na lista deve ter botão de ação para: editar e excluir 
     |__Botão cadastra novo artista(Nome, pais)
 

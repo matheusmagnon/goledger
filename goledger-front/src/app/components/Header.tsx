@@ -5,7 +5,8 @@ import React from 'react';
 
 export function Header() {
     return (
-        <header className="h-fit flex flex-row justify-between items-center w-full bg-white rounded-full px-6 py-2">
+        <header className="h-fit flex flex-row justify-between items-center w-full bg-white rounded-full px-4 "
+        style={{ boxShadow: '-1px -1px 4px 1px rgba(255, 255, 255, 0.5)' }}>
             <Image
             className="lg:h-16 h-10 object-contain"
             src={logo}
