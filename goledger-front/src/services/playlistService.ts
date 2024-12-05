@@ -3,7 +3,7 @@ import apiClient from '../lib/apiClient';
 type Playlist = {
   id: string;
   name: string;
-  songs: string[] ;
+  songs: string[];
   isPrivate: boolean;
 };
 
@@ -36,7 +36,7 @@ export const getPlaylists = async (): Promise<Playlist[]> => {
 
 
 export const createAlbum = async (albumData: CreateAlbumData): Promise<unknown> => {
-  const {name, year, artistSelected} = albumData
+  const { name, year, artistSelected } = albumData
   const response = await apiClient.post('/invoke/createAsset', {
     "asset": [
       {
@@ -62,7 +62,7 @@ export const updateAlbum = async (albumData: UpdateAlbumData): Promise<unknown> 
       ...albumData,
     },
   });
-  console.log(' response.data',  response.data)
+  console.log(' response.data', response.data)
   return response.data;
 };
 

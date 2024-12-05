@@ -36,7 +36,7 @@ export const getAlbums = async (): Promise<Album[]> => {
 
 
 export const createAlbum = async (albumData: CreateAlbumData): Promise<unknown> => {
-  const {name, year, artistSelected} = albumData
+  const { name, year, artistSelected } = albumData
   const response = await apiClient.post('/invoke/createAsset', {
     "asset": [
       {
@@ -62,7 +62,7 @@ export const updateAlbum = async (albumData: UpdateAlbumData): Promise<unknown> 
       ...albumData,
     },
   });
-  console.log(' response.data',  response.data)
+  console.log(' response.data', response.data)
   return response.data;
 };
 

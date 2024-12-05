@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from "react";
-import { NotePencil, Trash, FloppyDisk, XCircle   } from "phosphor-react";
+import { NotePencil, Trash, FloppyDisk, XCircle } from "phosphor-react";
 import { useStreaminContext } from '@/context/StreamingContext';
 
 interface ArtistItemProps {
@@ -11,7 +11,7 @@ interface ArtistItemProps {
 }
 
 export default function AlbumItem({ name, year, id }: ArtistItemProps) {
-  const {removeAlbum, fetchAlbum, editAlbum} = useStreaminContext();
+  const { removeAlbum, fetchAlbum, editAlbum } = useStreaminContext();
   const [isEditing, setIsEditing] = useState(false);
   const [newYear, setNewYear] = useState(year);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -21,12 +21,12 @@ export default function AlbumItem({ name, year, id }: ArtistItemProps) {
       inputRef.current.focus(); // Foca no campo
     }
   }, [isEditing]);
-  
+
   // Função para atualizar o artista
   const handleSave = async () => {
     console.log('id', id)
     console.log('year', newYear)
-    editAlbum(id, year=newYear)
+    editAlbum(id, year = newYear)
     setIsEditing(false);
     fetchAlbum();
   };
@@ -73,25 +73,25 @@ export default function AlbumItem({ name, year, id }: ArtistItemProps) {
                   onClick={handleSave}
                   className="gap-2 bg-emerald-600 hover:bg-emerald-700 cursor-pointer transition-colors p-3 
                             rounded-full h-12 flex items-center font-medium"
-                ><FloppyDisk  size={20}  className="text-paragraph" />
-                    <span className="text-paragraph">Salvar</span>
+                ><FloppyDisk size={20} className="text-paragraph" />
+                  <span className="text-paragraph">Salvar</span>
                 </button>
-              ):(<button
-                    onClick={handleEdit}
-                    className="gap-2 bg-slate-600 hover:bg-slate-700 cursor-pointer transition-colors p-3 
+              ) : (<button
+                onClick={handleEdit}
+                className="gap-2 bg-slate-600 hover:bg-slate-700 cursor-pointer transition-colors p-3 
                               rounded-full h-12 flex items-center font-medium">
-                    <NotePencil className="text-paragraph" size={20} />
-                    <span className="text-paragraph">Editar</span>
-                  </button>)}
+                <NotePencil className="text-paragraph" size={20} />
+                <span className="text-paragraph">Editar</span>
+              </button>)}
 
               {isEditing ? (
                 <button
-                    onClick={handleCancel}
-                    className="gap-2 bg-slate-600 hover:bg-slate-700 cursor-pointer transition-colors p-3 rounded-full h-12 flex items-center font-medium"
-                  >
-                    <XCircle className="text-paragraph" size={20} />
-                    <span className="text-paragraph">Cancelar</span>
-                  </button>
+                  onClick={handleCancel}
+                  className="gap-2 bg-slate-600 hover:bg-slate-700 cursor-pointer transition-colors p-3 rounded-full h-12 flex items-center font-medium"
+                >
+                  <XCircle className="text-paragraph" size={20} />
+                  <span className="text-paragraph">Cancelar</span>
+                </button>
               ) : (
                 <button
                   onClick={handleDelete}

@@ -7,83 +7,83 @@ import { getAlbums, createAlbum, deleteAlbum, updateAlbum } from '@/services/alb
 import { getSongs, createSong, deleteSong } from '@/services/songsService';
 import { getPlaylists, deletePlaylist } from '@/services/playlistService';
 
-  type artistSelectedType = {
-    name: string;
-    '@key': string;
-  };
+type artistSelectedType = {
+  name: string;
+  '@key': string;
+};
 
-  type StreamingContextType = {
-    artists: Artist[];
-    addArtist: (name: string, country: string) => void;
-    fetchArtists: () => void;
-    removeArtist: (key: string) => void;
-    fetchAlbum:  () => void;
-    addAlbum: (name: string, year: string, artistSelected?: artistSelectedType ) => void;
-    removeAlbum: (key: string) => void;
-    editAlbum: (id: string, year: string) => void;
-    albums: Album[];
-    songs: SongType[];
-    fetchSongs: () => void;
-    addSong: (name: string, AlbumId: string) => void;
-    removeSong: (key: string) => void;
-    playlists: PlaylistType[];
-    fetchPlaylists: () => void;
-    removePlaylist: (key: string) => void;
-  };
+type StreamingContextType = {
+  artists: Artist[];
+  addArtist: (name: string, country: string) => void;
+  fetchArtists: () => void;
+  removeArtist: (key: string) => void;
+  fetchAlbum: () => void;
+  addAlbum: (name: string, year: string, artistSelected?: artistSelectedType) => void;
+  removeAlbum: (key: string) => void;
+  editAlbum: (id: string, year: string) => void;
+  albums: Album[];
+  songs: SongType[];
+  fetchSongs: () => void;
+  addSong: (name: string, AlbumId: string) => void;
+  removeSong: (key: string) => void;
+  playlists: PlaylistType[];
+  fetchPlaylists: () => void;
+  removePlaylist: (key: string) => void;
+};
 
-  type Artist = {
+type Artist = {
+  '@assetType': string;
+  '@key': string;
+  '@lastTouchBy': string;
+  '@lastTx': string;
+  '@lastUpdated': string;
+  country: string;
+  name: string;
+};
+
+type Album = {
+  '@assetType': string;
+  '@key': string;
+  '@lastTouchBy': string;
+  '@lastTx': string;
+  '@lastUpdated': string;
+  artist: {
     '@assetType': string;
     '@key': string;
-    '@lastTouchBy': string;
-    '@lastTx': string;
-    '@lastUpdated': string;
-    country: string;
-    name: string;
-  };
+  }
+  year: string;
+  name: string;
+};
 
-  type Album = {
+type SongType = {
+  '@assetType': string;
+  '@key': string;
+  '@lastTouchBy': string;
+  '@lastTx': string;
+  '@lastUpdated': string;
+  album: {
     '@assetType': string;
     '@key': string;
-    '@lastTouchBy': string;
-    '@lastTx': string;
-    '@lastUpdated': string;
-    artist:{
+  }
+  name: string;
+};
+
+type PlaylistType = {
+  '@assetType': string;
+  '@key': string;
+  '@lastTouchBy': string;
+  '@lastTx': string;
+  '@lastUpdated': string;
+  name: string;
+  private: string;
+  songs: [
+    {
       '@assetType': string;
       '@key': string;
     }
-    year: string;
-    name: string;
-  };
-  
-  type SongType = {
-    '@assetType': string;
-    '@key': string;
-    '@lastTouchBy': string;
-    '@lastTx': string;
-    '@lastUpdated': string;
-    album:{
-      '@assetType': string;
-      '@key': string;
-    }
-    name: string;
-  };
+  ];
 
-  type PlaylistType = {
-    '@assetType': string;
-    '@key': string;
-    '@lastTouchBy': string;
-    '@lastTx': string;
-    '@lastUpdated': string;
-    name: string;
-    private: string;
-    songs: [
-      {
-        '@assetType': string;
-        '@key': string;
-      }
-    ];
-
-  };
+};
 
 const StreamingContext = createContext<StreamingContextType | undefined>(undefined);
 
@@ -93,18 +93,18 @@ export const StreaminProvider = ({ children }: { children: ReactNode }) => {
   const [songs, setSongs] = useState<SongType[]>([]);
   const [playlists, setPlaylists] = useState<PlaylistType[]>([]);
 
-    // Função para buscar artistas
+  // Função para buscar artistas
   const fetchArtists = async () => {
-        try {
-          const { result } = await getArtists();
-        //   console.log('result', result);
-        setArtists(result); // Atualiza a lista de artistas
-        } catch (error) {
-          console.error('Erro ao buscar artistas:', error);
-        }
+    try {
+      const { result } = await getArtists();
+      //   console.log('result', result);
+      setArtists(result); // Atualiza a lista de artistas
+    } catch (error) {
+      console.error('Erro ao buscar artistas:', error);
+    }
   };
 
-    // Função para criar um novo artista
+  // Função para criar um novo artista
   const addArtist = async (name: string, country: string) => {
     try {
       await createArtist({ name, country });
@@ -118,7 +118,7 @@ export const StreaminProvider = ({ children }: { children: ReactNode }) => {
   const removeArtist = async (key: string) => {
     try {
       await deleteArtist(key);
-      fetchArtists(); 
+      fetchArtists();
       toast.success('Artista deletado com sucesso!');
     } catch (error) {
       console.error('Erro ao excluir o artista:', error);
@@ -150,7 +150,7 @@ export const StreaminProvider = ({ children }: { children: ReactNode }) => {
   const removeAlbum = async (key: string) => {
     try {
       await deleteAlbum(key);
-      fetchAlbum(); 
+      fetchAlbum();
       toast.success('Álbum deletado com sucesso!');
     } catch (error) {
       console.error('Erro ao excluir o Álbum:', error);
@@ -159,8 +159,8 @@ export const StreaminProvider = ({ children }: { children: ReactNode }) => {
 
   const editAlbum = async (id: string, year: string) => {
     try {
-      await updateAlbum({id, year});
-      fetchAlbum(); 
+      await updateAlbum({ id, year });
+      fetchAlbum();
       toast.success('Álbum editado com sucesso!');
     } catch (error) {
       console.error('Erro ao excluir o Álbum:', error);
@@ -182,7 +182,7 @@ export const StreaminProvider = ({ children }: { children: ReactNode }) => {
     console.log('name', name);
     console.log('AlbumId', AlbumId);
     try {
-      await createSong({name, AlbumId} );
+      await createSong({ name, AlbumId });
       fetchSongs(); // Atualiza a lista de artistas após a criação
       toast.success('Música criada com sucesso!');
     } catch (error) {
@@ -193,7 +193,7 @@ export const StreaminProvider = ({ children }: { children: ReactNode }) => {
   const removeSong = async (key: string) => {
     try {
       await deleteSong(key);
-      fetchSongs(); 
+      fetchSongs();
       toast.success('Música deletada com sucesso!');
     } catch (error) {
       toast.error(`Não foi possível deletar a música!' 
@@ -215,7 +215,7 @@ export const StreaminProvider = ({ children }: { children: ReactNode }) => {
   const removePlaylist = async (key: string) => {
     try {
       await deletePlaylist(key);
-      fetchPlaylists(); 
+      fetchPlaylists();
       toast.success('Playlist deletada com sucesso!');
     } catch (error) {
       toast.error(`Não foi possível deletar a Playlist!' 
@@ -225,24 +225,25 @@ export const StreaminProvider = ({ children }: { children: ReactNode }) => {
 
 
   return (
-    <StreamingContext.Provider 
-      value={{  artists, 
-                addArtist, 
-                fetchArtists, 
-                removeArtist, 
-                albums, 
-                addAlbum, 
-                fetchAlbum, 
-                removeAlbum,
-                editAlbum,
-                songs,
-                fetchSongs,
-                addSong,
-                removeSong,
-                playlists,
-                fetchPlaylists,
-                removePlaylist
-              }}>
+    <StreamingContext.Provider
+      value={{
+        artists,
+        addArtist,
+        fetchArtists,
+        removeArtist,
+        albums,
+        addAlbum,
+        fetchAlbum,
+        removeAlbum,
+        editAlbum,
+        songs,
+        fetchSongs,
+        addSong,
+        removeSong,
+        playlists,
+        fetchPlaylists,
+        removePlaylist
+      }}>
       {children}
     </StreamingContext.Provider>
   );
@@ -250,9 +251,9 @@ export const StreaminProvider = ({ children }: { children: ReactNode }) => {
 
 // Hook customizado para acessar o contexto
 export const useStreaminContext = (): StreamingContextType => {
-    const context = useContext(StreamingContext);
-    if (!context) {
-      throw new Error('useArtistContext deve ser usado dentro de um StreamingProvider');
-    }
-    return context;
-  };
+  const context = useContext(StreamingContext);
+  if (!context) {
+    throw new Error('useArtistContext deve ser usado dentro de um StreamingProvider');
+  }
+  return context;
+};

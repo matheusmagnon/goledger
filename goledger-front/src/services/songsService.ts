@@ -24,7 +24,7 @@ export const getSongs = async (): Promise<Song[]> => {
 
 export const createSong = async (songData: CreateSongData): Promise<unknown> => {
   console.log('songData', songData)
-  const {name, AlbumId} = songData
+  const { name, AlbumId } = songData
   const response = await apiClient.post('/invoke/createAsset', {
     "asset": [
       {

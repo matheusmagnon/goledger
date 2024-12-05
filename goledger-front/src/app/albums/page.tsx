@@ -13,7 +13,7 @@ import SearchInput from '../components/inputs/SearchInput';
 // const ErrorMessage = ({ message }: { message: string }) => <div>{message}</div>;
 
 export default function Artists() {
-  const {albums, addAlbum, fetchAlbum, artists, fetchArtists} = useStreaminContext();
+  const { albums, addAlbum, fetchAlbum, artists, fetchArtists } = useStreaminContext();
   // const [isLoading, setIsLoading] = useState<boolean>(true);
   // const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState<string>('');
@@ -22,7 +22,7 @@ export default function Artists() {
   const [country, setCountry] = useState<string>('');
 
 
-  const artistsToSelection = artists.map((artist)=>{
+  const artistsToSelection = artists.map((artist) => {
     return {
       name: artist.name,
       '@key': artist['@key']
@@ -33,12 +33,12 @@ export default function Artists() {
     fetchArtists();
   }, []); // O array vazio garante que a requisição seja feita apenas uma vez, após a renderização inicial'
 
-  
+
   useEffect(() => {
     fetchAlbum();
     // console.log('artists eff', artists)
   }, []); // O array vazio garante que a requisição seja feita apenas uma vez, após a renderização inicial'
-  
+
   // if (isLoading) return <Loading />;
   // if (error) return <ErrorMessage message={error} />;
 
@@ -98,25 +98,25 @@ export default function Artists() {
               />
             </div>
             <div className="mt-6 flex justify-end">
-            <button
-              onClick={handleCreateAlbum}
-              className="gap-2 bg-emerald-600 hover:bg-emerald-700 cursor-pointer transition-colors p-3 
+              <button
+                onClick={handleCreateAlbum}
+                className="gap-2 bg-emerald-600 hover:bg-emerald-700 cursor-pointer transition-colors p-3 
                           rounded-full h-12 flex items-center font-medium"
-              ><FloppyDisk  size={20}  className="text-paragraph" />
-              <span className="text-paragraph">Salvar</span>
-            </button>
+              ><FloppyDisk size={20} className="text-paragraph" />
+                <span className="text-paragraph">Salvar</span>
+              </button>
             </div>
             <Dialog.Close className="absolute top-2 right-2 text-xl cursor-pointer">×</Dialog.Close>
           </Dialog.Content>
         </Dialog.Root>
       </div>
-      
+
       <ListContainer>
         {albums?.map((album) => (
-            <AlbumItem key={album['@key']} name={album.name} year={album.year} id={album['@key']} />
-          ))
+          <AlbumItem key={album['@key']} name={album.name} year={album.year} id={album['@key']} />
+        ))
         }
       </ListContainer>
-      </div>
+    </div>
   );
 }

@@ -13,7 +13,7 @@ import { FloppyDisk } from 'phosphor-react';
 // const ErrorMessage = ({ message }: { message: string }) => <div>{message}</div>;
 
 export default function Artists() {
-  const {songs, fetchSongs, playlists, fetchPlaylists} = useStreaminContext();
+  const { songs, fetchSongs, playlists, fetchPlaylists } = useStreaminContext();
   // const [isLoading, setIsLoading] = useState<boolean>(true);
   // const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState<string>('');
@@ -37,12 +37,12 @@ export default function Artists() {
     fetchPlaylists();
   }, []); // O array vazio garante que a requisição seja feita apenas uma vez, após a renderização inicial'
 
-  
+
   useEffect(() => {
     fetchSongs();
     // console.log('artists eff', artists)
   }, []); // O array vazio garante que a requisição seja feita apenas uma vez, após a renderização inicial'
-  
+
   // if (isLoading) return <Loading />;
   // if (error) return <ErrorMessage message={error} />;
 
@@ -87,31 +87,31 @@ export default function Artists() {
             </div>
             <div className="mt-4">
               <label className="block text-sm font-semibold">Deseja que a playlist seja privada?</label>
-              
-              <div className='flex gap-10'>
-              <label>
-                <input
-                  className='mr-1'
-                  type="radio"
-                  name="opcao"
-                  value="sim"
-                  checked={selectedOption === 'sim'}
-                  onChange={handleChange}
-                />
-                Sim
-              </label>
 
-              <label>
-                <input
-                  className='mr-1'
-                  type="radio"
-                  name="opcao"
-                  value="nao"
-                  checked={selectedOption === 'nao'}
-                  onChange={handleChange}
-                />
-                Não
-              </label>
+              <div className='flex gap-10'>
+                <label>
+                  <input
+                    className='mr-1'
+                    type="radio"
+                    name="opcao"
+                    value="sim"
+                    checked={selectedOption === 'sim'}
+                    onChange={handleChange}
+                  />
+                  Sim
+                </label>
+
+                <label>
+                  <input
+                    className='mr-1'
+                    type="radio"
+                    name="opcao"
+                    value="nao"
+                    checked={selectedOption === 'nao'}
+                    onChange={handleChange}
+                  />
+                  Não
+                </label>
               </div>
             </div>
             <div className="mt-4">
@@ -123,25 +123,25 @@ export default function Artists() {
               /> */}
             </div>
             <div className="mt-6 flex justify-end">
-            <button
-              onClick={handleCreateAlbum}
-              className="gap-2 bg-emerald-600 hover:bg-emerald-700 cursor-pointer transition-colors p-3 
+              <button
+                onClick={handleCreateAlbum}
+                className="gap-2 bg-emerald-600 hover:bg-emerald-700 cursor-pointer transition-colors p-3 
                           rounded-full h-12 flex items-center font-medium"
-              ><FloppyDisk  size={20}  className="text-paragraph" />
-              <span className="text-paragraph">Salvar</span>
-            </button>
+              ><FloppyDisk size={20} className="text-paragraph" />
+                <span className="text-paragraph">Salvar</span>
+              </button>
             </div>
             <Dialog.Close className="absolute top-2 right-2 text-xl cursor-pointer">×</Dialog.Close>
           </Dialog.Content>
         </Dialog.Root>
       </div>
-      
+
       <ListContainer>
         {playlists?.map((playlist) => (
-            <PlaylistItem key={playlist['@key']} name={playlist.name} isPrivate={playlist.private} id={playlist['@key']} />
-          ))
+          <PlaylistItem key={playlist['@key']} name={playlist.name} isPrivate={playlist.private} id={playlist['@key']} />
+        ))
         }
       </ListContainer>
-      </div>
+    </div>
   );
 }

@@ -18,7 +18,7 @@ type albumSelectedType = {
 };
 
 export default function Artists() {
-  const {songs, fetchSongs, addSong, albums, fetchAlbum} = useStreaminContext();
+  const { songs, fetchSongs, addSong, albums, fetchAlbum } = useStreaminContext();
   // const [isLoading, setIsLoading] = useState<boolean>(true);
   // const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState<string>('');
@@ -27,7 +27,7 @@ export default function Artists() {
   // const [country, setCountry] = useState<string>('');
 
 
-  const AlbumsToSelection = albums.map((album)=>{
+  const AlbumsToSelection = albums.map((album) => {
     return {
       name: album.name,
       '@key': album['@key']
@@ -38,12 +38,12 @@ export default function Artists() {
     fetchSongs();
   }, []); // O array vazio garante que a requisição seja feita apenas uma vez, após a renderização inicial'
 
-  
+
   useEffect(() => {
     fetchAlbum();
     // console.log('artists eff', artists)
   }, []); // O array vazio garante que a requisição seja feita apenas uma vez, após a renderização inicial'
-  
+
   // if (isLoading) return <Loading />;
   // if (error) return <ErrorMessage message={error} />;
 
@@ -55,14 +55,14 @@ export default function Artists() {
     // Encontrando o álbum correspondente usando find
     const album = albums.find(album => album["@key"] === song.album["@key"]);
     const albumName = album ? album.name : "Álbum Desconhecido"; // Caso não encontre, retorna "Álbum Desconhecido"
-    
+
     return {
       id: song["@key"], // Chave da música
       name: song.name,    // Nome da música
       album: albumName    // Nome do álbum
     };
   });
-  
+
   console.log(JSON.stringify(musicList, null, 2));
 
   // console.log('album Names',albumNames );
@@ -71,9 +71,9 @@ export default function Artists() {
     // console.log('albumSelected', albumSelected)
     if (name && albumSelected) {
       const albumId = albumSelected['@key']
-      addSong(name, String(albumId));      
-      setName(''); 
-      setAlbumSelected(undefined); 
+      addSong(name, String(albumId));
+      setName('');
+      setAlbumSelected(undefined);
     } else {
       toast.error('Por favor, preencha todos os campos');
     }
@@ -113,25 +113,25 @@ export default function Artists() {
               />
             </div>
             <div className="mt-6 flex justify-end">
-            <button
-              onClick={handleCreateSong}
-              className="gap-2 bg-emerald-600 hover:bg-emerald-700 cursor-pointer transition-colors p-3 
+              <button
+                onClick={handleCreateSong}
+                className="gap-2 bg-emerald-600 hover:bg-emerald-700 cursor-pointer transition-colors p-3 
                           rounded-full h-12 flex items-center font-medium"
-              ><FloppyDisk  size={20}  className="text-paragraph" />
-              <span className="text-paragraph">Salvar</span>
-            </button>
+              ><FloppyDisk size={20} className="text-paragraph" />
+                <span className="text-paragraph">Salvar</span>
+              </button>
             </div>
             <Dialog.Close className="absolute top-2 right-2 text-xl cursor-pointer">×</Dialog.Close>
           </Dialog.Content>
         </Dialog.Root>
       </div>
-      
+
       <ListContainer>
         {musicList?.map((song) => (
-            <SongItem key={song.id} name={song.name} id={song.id} AlbumName={song.album} />
-          ))
+          <SongItem key={song.id} name={song.name} id={song.id} AlbumName={song.album} />
+        ))
         }
       </ListContainer>
-      </div>
+    </div>
   );
 }

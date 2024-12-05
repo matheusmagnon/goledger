@@ -22,13 +22,13 @@ export default function RootLayout({
     <StreaminProvider>
       <html lang="en">
         <body className="antialiased">
-            <Container>
-              <Header />
-              <main>{children}</main>
-            </Container>
+          <Container>
+            <Header />
+            <main>{children}</main>
+          </Container>
           <Toaster />
         </body>
-        
+
       </html>
     </StreaminProvider>
   );

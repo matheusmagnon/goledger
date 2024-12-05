@@ -13,7 +13,7 @@ import { FloppyDisk } from 'phosphor-react';
 // const ErrorMessage = ({ message }: { message: string }) => <div>{message}</div>;
 
 export default function Artists() {
-  const {artists, addArtist, fetchArtists} = useStreaminContext();
+  const { artists, addArtist, fetchArtists } = useStreaminContext();
   // const [isLoading, setIsLoading] = useState<boolean>(true);
   // const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState<string>('');
@@ -23,7 +23,7 @@ export default function Artists() {
     fetchArtists();
   }, []); // O array vazio garante que a requisição seja feita apenas uma vez, após a renderização inicial'
 
-  
+
   // if (isLoading) return <Loading />;
   // if (error) return <ErrorMessage message={error} />;
 
@@ -72,24 +72,24 @@ export default function Artists() {
               />
             </div>
             <div className="mt-6 flex justify-end">
-            <button
-              onClick={handleCreateArtist}
-              className="gap-2 bg-emerald-600 hover:bg-emerald-700 cursor-pointer transition-colors p-3 rounded-full h-12 flex items-center font-medium"
-              ><FloppyDisk  size={20}  className="text-paragraph" />
-              <span className="text-paragraph">Salvar</span>
-            </button>
+              <button
+                onClick={handleCreateArtist}
+                className="gap-2 bg-emerald-600 hover:bg-emerald-700 cursor-pointer transition-colors p-3 rounded-full h-12 flex items-center font-medium"
+              ><FloppyDisk size={20} className="text-paragraph" />
+                <span className="text-paragraph">Salvar</span>
+              </button>
             </div>
             <Dialog.Close className="absolute top-2 right-2 text-xl cursor-pointer">×</Dialog.Close>
           </Dialog.Content>
         </Dialog.Root>
       </div>
-      
+
       <ListContainer>
         {artists?.map((artist) => (
-            <ArtistItem key={artist['@key']} name={artist.name} country={artist.country} id={artist['@key']} />
-          ))
+          <ArtistItem key={artist['@key']} name={artist.name} country={artist.country} id={artist['@key']} />
+        ))
         }
       </ListContainer>
-      </div>
+    </div>
   );
 }
