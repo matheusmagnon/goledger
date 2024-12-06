@@ -1,11 +1,11 @@
 "use client";
 
-import { createContext, ReactNode, use, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { getArtists, createArtist, deleteArtist } from '@/services/artistService';
 import { getAlbums, createAlbum, deleteAlbum, updateAlbum } from '@/services/albumsService';
 import { getSongs, createSong, deleteSong } from '@/services/songsService';
-import { getPlaylists, deletePlaylist } from '@/services/playlistService';
+import { getPlaylists, deletePlaylist, createPlaylist, updatePlaylist } from '@/services/playlistService';
 
 type artistSelectedType = {
   name: string;
@@ -29,6 +29,8 @@ type StreamingContextType = {
   playlists: PlaylistType[];
   fetchPlaylists: () => void;
   removePlaylist: (key: string) => void;
+  addPlaylist: (data: CreatePlaylistData) => void;
+  editPlaylist: (data: UpdatePlaylistDataType) => void;
 };
 
 type Artist = {
@@ -83,6 +85,22 @@ type PlaylistType = {
     }
   ];
 
+};
+
+type CreatePlaylistData = {
+  name: string;
+  isPrivate: boolean;
+  selectedSongs?: {
+    '@key': string;
+  }[];
+};
+
+type UpdatePlaylistDataType = {
+  id: string;
+  private?: boolean;
+  songs?: {
+    '@key': string;
+  }[];
 };
 
 const StreamingContext = createContext<StreamingContextType | undefined>(undefined);
@@ -173,6 +191,7 @@ export const StreaminProvider = ({ children }: { children: ReactNode }) => {
       const { result } = await getSongs();
       console.log('result', result);
       setSongs(result);
+      fetchPlaylists()
     } catch (error) {
       console.error('Erro ao buscar artistas:', error);
     }
@@ -203,12 +222,38 @@ export const StreaminProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const fetchPlaylists = async () => {
+ 
     try {
+      // const  resultSongs  = await getSongs();
+      // console.log('resultSongs', resultSongs);
+      // setSongs(resultSongs.resultSongs);
+
       const { result } = await getPlaylists();
       console.log('result playlist', result);
-      setPlaylists(result);
+      const playlistsWithSongNames = result.map(playlist => {
+        const songsWithNames = playlist.songs.map(song => {
+          const songDetails = songs.find(s => s['@key'] === song['@key']);
+
+          if (songDetails) {
+            return { name: songDetails.name, '@key': songDetails['@key'] };
+          } else {
+            return null;
+          }
+        });
+
+        return {
+          ...playlist,
+          songs: songsWithNames.filter(song => song !== null),
+        };
+      });
+
+      console.log('playlistsWithSongNames', playlistsWithSongNames);
+
+      // Update the state with playlists already containing song names
+      setPlaylists(playlistsWithSongNames);
+
     } catch (error) {
-      console.error('Erro ao buscar artistas:', error);
+      console.error('Error fetching playlists:', error);
     }
   };
 
@@ -220,6 +265,29 @@ export const StreaminProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       toast.error(`Não foi possível deletar a Playlist!' 
          ${error}`);
+    }
+  };
+
+  const editPlaylist = async (UpdatePlaylistData: UpdatePlaylistDataType) => {
+    try {
+      await updatePlaylist(UpdatePlaylistData);
+      fetchPlaylists();
+      toast.success('Playlist editado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao excluir o Playlist:', error);
+    }
+  };
+
+
+  const addPlaylist = async (createPlaylistData: CreatePlaylistData) => {
+    console.log('addPlaylist', createPlaylistData);
+    // const {name, isPrivate, selectedSongs} = createPlaylistData 
+    try {
+      await createPlaylist(createPlaylistData);
+      fetchPlaylists();
+      toast.success('Playlist criado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao criar a playlist:', error);
     }
   };
 
@@ -242,7 +310,9 @@ export const StreaminProvider = ({ children }: { children: ReactNode }) => {
         removeSong,
         playlists,
         fetchPlaylists,
-        removePlaylist
+        removePlaylist,
+        addPlaylist,
+        editPlaylist
       }}>
       {children}
     </StreamingContext.Provider>

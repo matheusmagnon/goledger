@@ -7,58 +7,60 @@ import { toast } from 'sonner';
 import { useStreaminContext } from '@/context/StreamingContext';
 import ListContainer from '../components/ListContainer';
 import { FloppyDisk } from 'phosphor-react';
-// import SearchInput from '../components/inputs/SearchInput';
-
-// const Loading = () => <div className='text-white'>Carregando...</div>;
-// const ErrorMessage = ({ message }: { message: string }) => <div>{message}</div>;
+import MultiSelect from '../components/inputs/MultiSelect';
 
 export default function Artists() {
-  const { songs, fetchSongs, playlists, fetchPlaylists } = useStreaminContext();
-  // const [isLoading, setIsLoading] = useState<boolean>(true);
-  // const [error, setError] = useState<string | null>(null);
+  const { songs, fetchSongs, playlists, fetchPlaylists, addPlaylist } = useStreaminContext();
   const [name, setName] = useState<string>('');
-  const [artistsSelected, setArtistsSelected] = useState({});
-  // const [artistsToSelection, setArtistsToSelection] = useState();
-  const [country, setCountry] = useState<string>('');
+  // const [selectedSongs, setSelectedSongs] = useState([]);
+  const [selectedSongs, setSelectedSongs] = useState<[]>([]);
+
+  const [isPrivate, setIsPrivate] = useState<boolean | undefined>(undefined); // Inicializa com 'false'
   const [selectedOption, setSelectedOption] = useState<string>(''); // Estado para armazenar a opção selecionada
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedOption(e.target.value); // Atualiza o estado com a opção selecionada
+    const value = e.target.value;
+    setSelectedOption(value); // Armazena a opção selecionada
+    setIsPrivate(value === 'sim'); // Atualiza o estado isPrivate com base na opção
   };
 
-  // const artistsToSelection = artists.map((artist)=>{
-  //   return {
-  //     name: artist.name,
-  //     '@key': artist['@key']
-  //   }
-  // })
+  const songsToSelection = songs.map((song) => {
+    return {
+      name: song.name,
+      '@key': song['@key']
+    }
+  });
 
+  console.log('selectedItems', selectedSongs)
   useEffect(() => {
     fetchPlaylists();
-  }, []); // O array vazio garante que a requisição seja feita apenas uma vez, após a renderização inicial'
-
+  }, []);
+  // cons
 
   useEffect(() => {
+    // fetchPlaylists();
     fetchSongs();
-    // console.log('artists eff', artists)
-  }, []); // O array vazio garante que a requisição seja feita apenas uma vez, após a renderização inicial'
+  }, []); // Carrega as playlists e músicas ao montar o componente
 
-  // if (isLoading) return <Loading />;
-  // if (error) return <ErrorMessage message={error} />;
+// ole.log('playlists', playlists);
+  // console.log('songs', songs);
+  const handleCreatePlaylist= () => {
+    const updatedSongs = selectedSongs?.map(({ name, ...rest }) => rest);
 
-  // Function to handle artist creation
-
-  // console.log('artistsToSelection', artistsToSelection);
-
-  const handleCreateAlbum = () => {
-    if (name && country) {
-      addAlbum(name, country, artistsSelected); // Adiciona o novo artista
+    console.log(name , isPrivate , updatedSongs)
+    if (name && isPrivate!= undefined ) {
+      addPlaylist({name, isPrivate, selectedSongs:updatedSongs}); // Usa 'isPrivate' ao criar a playlist
       setName(''); // Limpa o campo de nome
-      setCountry(''); // Limpa o campo de país
+      setIsPrivate(false);
+      setSelectedSongs(undefined);
+      setSelectedOption('')
     } else {
       toast.error('Por favor, preencha todos os campos');
     }
   };
+
+// console.log('llllll', JSON.stringify(playlists, null, 2));
+
 
   return (
     <div className="min-w-full flex flex-col">
@@ -71,7 +73,7 @@ export default function Artists() {
           >
             Cadastrar Playlist
           </Dialog.Trigger>
-          <Dialog.Overlay className="fixed inset-0 bg-black opacity-50 z-40" />
+          <Dialog.Overlay className="fixed inset-0 bg-black opacity-50 z-200" />
           <Dialog.Content className="fixed top-1/4 left-1/2 transform -translate-x-1/2 w-96 p-6
                                    bg-white rounded-lg shadow-xl z-50">
             <Dialog.Title className="text-2xl font-bold">Insira os dados da playlist</Dialog.Title>
@@ -87,47 +89,47 @@ export default function Artists() {
             </div>
             <div className="mt-4">
               <label className="block text-sm font-semibold">Deseja que a playlist seja privada?</label>
-
-              <div className='flex gap-10'>
+              <div className="flex gap-10 pt-1">
                 <label>
                   <input
-                    className='mr-1'
+                    className="mr-1"
                     type="radio"
                     name="opcao"
                     value="sim"
                     checked={selectedOption === 'sim'}
                     onChange={handleChange}
                   />
-                  Sim
+                  <span className="font-semibold">Sim</span>
                 </label>
 
                 <label>
                   <input
-                    className='mr-1'
+                    className="mr-1"
                     type="radio"
                     name="opcao"
                     value="nao"
                     checked={selectedOption === 'nao'}
                     onChange={handleChange}
                   />
-                  Não
+                  <span className="font-semibold">Não</span>
                 </label>
               </div>
             </div>
             <div className="mt-4">
-              <label className="block text-sm font-semibold">Nome do artista:</label>
-              {/* <SearchInput
-                items={artistsToSelection}
-                placeholder="Digite o nome do artista..."
-                onSelect={(selected) => setArtistsSelected(selected)}
-              /> */}
+              <label className="block text-sm font-semibold pb-2">Nome da música:</label>
+              <MultiSelect
+                items={songsToSelection}
+                onSelectionChange={(selected) => setSelectedSongs(selected)}
+                resetSelection={selectedSongs == undefined}
+              />
             </div>
             <div className="mt-6 flex justify-end">
               <button
-                onClick={handleCreateAlbum}
+                onClick={handleCreatePlaylist}
                 className="gap-2 bg-emerald-600 hover:bg-emerald-700 cursor-pointer transition-colors p-3 
                           rounded-full h-12 flex items-center font-medium"
-              ><FloppyDisk size={20} className="text-paragraph" />
+              >
+                <FloppyDisk size={20} className="text-paragraph" />
                 <span className="text-paragraph">Salvar</span>
               </button>
             </div>
@@ -138,9 +140,8 @@ export default function Artists() {
 
       <ListContainer>
         {playlists?.map((playlist) => (
-          <PlaylistItem key={playlist['@key']} name={playlist.name} isPrivate={playlist.private} id={playlist['@key']} />
-        ))
-        }
+          <PlaylistItem key={playlist['@key']} name={playlist.name} isPrivate={playlist.private} id={playlist['@key']} songsOfPlaylist={playlist.songs} />
+        ))}
       </ListContainer>
     </div>
   );

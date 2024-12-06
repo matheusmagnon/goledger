@@ -36,7 +36,7 @@ export default function Artists() {
 
   useEffect(() => {
     fetchSongs();
-  }, []); // O array vazio garante que a requisição seja feita apenas uma vez, após a renderização inicial'
+  }, []); 
 
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export default function Artists() {
 
   // Function to handle artist creation
 
-  console.log('artistsToSelection', AlbumsToSelection);
+  // console.log('artistsToSelection', AlbumsToSelection);
 
   const musicList = songs.map(song => {
     // Encontrando o álbum correspondente usando find
@@ -63,7 +63,7 @@ export default function Artists() {
     };
   });
 
-  console.log(JSON.stringify(musicList, null, 2));
+  // console.log(JSON.stringify(musicList, null, 2));
 
   // console.log('album Names',albumNames );
 

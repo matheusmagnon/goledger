@@ -7,20 +7,20 @@ type Playlist = {
   isPrivate: boolean;
 };
 
-type artistSelectedType = {
+type CreatePlaylistData = {
   name: string;
-  '@key': string;
+  isPrivate: boolean;
+  selectedSongs?: {
+    '@key': string;
+  }[];
 };
 
-type CreateAlbumData = {
-  name: string;
-  year: string;
-  artistSelected: artistSelectedType;
-};
-
-type UpdateAlbumData = {
+type UpdatePlaylistData = {
   id: string;
-  year?: string;
+  private: boolean;
+  songs: {
+    '@key': string;
+  }[];
 };
 
 export const getPlaylists = async (): Promise<Playlist[]> => {
@@ -35,17 +35,14 @@ export const getPlaylists = async (): Promise<Playlist[]> => {
 };
 
 
-export const createAlbum = async (albumData: CreateAlbumData): Promise<unknown> => {
-  const { name, year, artistSelected } = albumData
+export const createPlaylist = async (playlistData: CreatePlaylistData): Promise<unknown> => {
   const response = await apiClient.post('/invoke/createAsset', {
     "asset": [
       {
-        "@assetType": "album",
-        "name": name,
-        "artist": {
-          "@key": artistSelected['@key'],
-        },
-        "year": year
+        "@assetType": "playlist",
+        "name": playlistData.name,
+        "songs": playlistData.selectedSongs,
+        "private": playlistData.isPrivate,
       }
     ]
   });
@@ -53,13 +50,13 @@ export const createAlbum = async (albumData: CreateAlbumData): Promise<unknown> 
 };
 
 
-export const updateAlbum = async (albumData: UpdateAlbumData): Promise<unknown> => {
+export const updatePlaylist = async (playlistData: UpdatePlaylistData): Promise<unknown> => {
   const response = await apiClient.put('/invoke/updateAsset', {
     update: {
-      '@assetType': 'album',
-      '@key': albumData.id,
-      year: albumData.year,
-      ...albumData,
+      '@assetType': 'playlist',
+      '@key': playlistData.id,
+      private: playlistData.private,
+      songs:playlistData.songs,
     },
   });
   console.log(' response.data', response.data)
