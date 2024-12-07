@@ -112,8 +112,8 @@ export default function Artists() {
       </div>
 
       <ListContainer>
-        {albums?.map((album) => (
-          <AlbumItem key={album['@key']} name={album.name} year={album.year} id={album['@key']} />
+        {albums?.map((album, index) => (
+          <AlbumItem key={album['@key'] || index} name={album.name} year={album.year} id={album['@key']} />
         ))
         }
       </ListContainer>

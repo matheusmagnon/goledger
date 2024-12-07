@@ -51,17 +51,17 @@ export default function Artists() {
 
   // console.log('artistsToSelection', AlbumsToSelection);
 
-  const musicList = songs.map(song => {
-    // Encontrando o álbum correspondente usando find
-    const album = albums.find(album => album["@key"] === song.album["@key"]);
-    const albumName = album ? album.name : "Álbum Desconhecido"; // Caso não encontre, retorna "Álbum Desconhecido"
+  // const musicList = songs.map(song => {
+  //   // Encontrando o álbum correspondente usando find
+  //   const album = albums.find(album => album["@key"] === song.album["@key"]);
+  //   const albumName = album ? album.name : "Álbum Desconhecido"; // Caso não encontre, retorna "Álbum Desconhecido"
 
-    return {
-      id: song["@key"], // Chave da música
-      name: song.name,    // Nome da música
-      album: albumName    // Nome do álbum
-    };
-  });
+  //   return {
+  //     id: song["@key"], // Chave da música
+  //     name: song.name,    // Nome da música
+  //     album: albumName    // Nome do álbum
+  //   };
+  // });
 
   // console.log(JSON.stringify(musicList, null, 2));
 
@@ -127,8 +127,8 @@ export default function Artists() {
       </div>
 
       <ListContainer>
-        {musicList?.map((song) => (
-          <SongItem key={song.id} name={song.name} id={song.id} AlbumName={song.album} />
+        {songs?.map((song, index) => (
+          <SongItem key={song['@key'] || index} name={song.name} id={song['@key']} AlbumName={song.album?.name} />
         ))
         }
       </ListContainer>

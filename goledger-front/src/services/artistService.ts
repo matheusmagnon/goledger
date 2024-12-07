@@ -1,16 +1,14 @@
 // services/artistService.ts
-import { Artist } from '@/reducers/artists/types';
+import { Artist, UpdateArtistType } from '@/reducers/artists/types';
 import apiClient from '../lib/apiClient';
+import { AxiosResponse } from 'axios';
 
 type CreateArtistData = {
   name: string;
   country: string;
 };
 
-type UpdateArtistData = {
-  name?: string;
-  country?: string;
-};
+
 
 // type DeleteArtistData = {
 //   '@assetType': string;
@@ -19,14 +17,14 @@ type UpdateArtistData = {
 
 // Função para obter os artistas
 export const getArtists = async (): Promise<Artist[]> => {
-  const response = await apiClient.post('/query/search', {
+  const { data }: AxiosResponse = await apiClient.post('/query/search', {
     query: {
       selector: {
         '@assetType': 'artist',
       },
     },
   });
-  return response.data;
+  return data.result;
 };
 
 // Função para criar um artista
@@ -45,12 +43,11 @@ export const createArtist = async (artistData: CreateArtistData): Promise<Artist
 };
 
 // Função para atualizar um artista
-export const updateArtist = async (key: string, artistData: UpdateArtistData): Promise<unknown> => {
-  console.log('artistData', artistData, key);
+export const updateArtist = async ( artistData: UpdateArtistType): Promise<Artist> => {
+  console.log('artistData', artistData);
   const response = await apiClient.put('/invoke/updateAsset', {
     update: {
       '@assetType': 'artist',
-      '@key': key,
       ...artistData,
     },
   });
@@ -58,7 +55,7 @@ export const updateArtist = async (key: string, artistData: UpdateArtistData): P
 };
 
 // Função para excluir um artista
-export const deleteArtist = async (key: string): Promise<unknown> => {
+export const deleteArtist = async (key: string): Promise<Artist> => {
   const response = await apiClient.delete('/invoke/deleteAsset', {
     data: {
       key: {

@@ -2,10 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { NotePencil, Trash, FloppyDisk, XCircle } from "phosphor-react";
-import { updateArtist } from "../../services/artistService";
-import { toast } from 'sonner';
 import { useStreamingContext } from '../../context/StreamingContext';
-
 
 interface ArtistItemProps {
   name: string;
@@ -14,7 +11,7 @@ interface ArtistItemProps {
 }
 
 export default function ArtistItem({ name, country, id }: ArtistItemProps) {
-  const { fetchArtists, removeArtist } = useStreamingContext();
+  const { removeArtist, editArtist } = useStreamingContext();
   const [isEditing, setIsEditing] = useState(false);
   const [newCountry, setNewCountry] = useState(country);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -27,15 +24,8 @@ export default function ArtistItem({ name, country, id }: ArtistItemProps) {
 
   // Função para atualizar o artista
   const handleSave = async () => {
-    try {
-      await updateArtist(id, { country: newCountry }); // Chama a função de updateArtist
-      fetchArtists();
-      toast.success('Artista atualizado com sucesso!');
-      setIsEditing(false);
-    } catch (err) {
-      toast.error('Não foi possivel atualizar  o artista');
-      console.error("Erro ao atualizar o artista:", err);
-    }
+    editArtist({'@key':id, name, country: newCountry});
+    setIsEditing(false);
   };
 
   // Função para ativar o modo de edição

@@ -1,29 +1,24 @@
+import { SongType } from '@/reducers/songs/types';
 import apiClient from '../lib/apiClient';
-
-type Song = {
-  id: string;
-  SongId: string;
-  name: string;
-};
+import { AxiosResponse } from 'axios';
 
 type CreateSongData = {
   name: string;
   AlbumId: string;
 };
 
-export const getSongs = async (): Promise<Song[]> => {
-  const response = await apiClient.post('/query/search', {
+export const getSongs = async (): Promise<SongType[]> => {
+  const { data }: AxiosResponse = await apiClient.post('/query/search', {
     query: {
       selector: {
         '@assetType': 'song',
       },
     },
   });
-  return response.data;
+  return data.result;
 };
 
-export const createSong = async (songData: CreateSongData): Promise<unknown> => {
-  console.log('songData', songData)
+export const createSong = async (songData: CreateSongData): Promise<SongType> => {
   const { name, AlbumId } = songData
   const response = await apiClient.post('/invoke/createAsset', {
     "asset": [

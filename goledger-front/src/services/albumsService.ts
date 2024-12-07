@@ -1,10 +1,18 @@
+import { AxiosResponse } from 'axios';
 import apiClient from '../lib/apiClient';
 
 type Album = {
-  id: string;
-  albumId: string;
-  name: string;
+  '@assetType': string;
+  '@key': string;
+  '@lastTouchBy': string;
+  '@lastTx': string;
+  '@lastUpdated': string;
+  artist: {
+    '@assetType': string;
+    '@key': string;
+  }
   year: string;
+  name: string;
 };
 
 type artistSelectedType = {
@@ -24,18 +32,18 @@ type UpdateAlbumData = {
 };
 
 export const getAlbums = async (): Promise<Album[]> => {
-  const response = await apiClient.post('/query/search', {
+  const { data }: AxiosResponse = await apiClient.post('/query/search', {
     query: {
       selector: {
         '@assetType': 'album',
       },
     },
   });
-  return response.data;
+  return data.result;
 };
 
 
-export const createAlbum = async (albumData: CreateAlbumData): Promise<unknown> => {
+export const createAlbum = async (albumData: CreateAlbumData): Promise<Album> => {
   const { name, year, artistSelected } = albumData
   const response = await apiClient.post('/invoke/createAsset', {
     "asset": [

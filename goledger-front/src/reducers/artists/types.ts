@@ -7,3 +7,9 @@ export type Artist = {
     country: string;
     name: string;
   };
+
+  export type UpdateArtistType = {
+    '@key': string;
+    name?: string;
+    country?: string;
+  };
