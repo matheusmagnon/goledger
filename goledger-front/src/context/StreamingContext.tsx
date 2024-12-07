@@ -1,11 +1,11 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { createContext, ReactNode, useContext, useState } from 'react';
 import { toast } from 'sonner';
-import { getArtists, createArtist, deleteArtist } from '@/services/artistService';
-import { getAlbums, createAlbum, deleteAlbum, updateAlbum } from '@/services/albumsService';
-import { getSongs, createSong, deleteSong } from '@/services/songsService';
-import { getPlaylists, deletePlaylist, createPlaylist, updatePlaylist } from '@/services/playlistService';
+import { getArtists, createArtist, deleteArtist } from '../services/artistService';
+import { getAlbums, createAlbum, deleteAlbum, updateAlbum } from '../services/albumsService';
+import { getSongs, createSong, deleteSong } from '../services/songsService';
+import { getPlaylists, deletePlaylist, createPlaylist, updatePlaylist } from '../services/playlistService';
 
 type artistSelectedType = {
   name: string;
@@ -105,7 +105,7 @@ type UpdatePlaylistDataType = {
 
 const StreamingContext = createContext<StreamingContextType | undefined>(undefined);
 
-export const StreaminProvider = ({ children }: { children: ReactNode }) => {
+export const StreamingProvider = ({ children }: { children: ReactNode }) => {
   const [artists, setArtists] = useState<Artist[]>([]);
   const [albums, setAlbums] = useState<Album[]>([]);
   const [songs, setSongs] = useState<SongType[]>([]);
@@ -320,7 +320,7 @@ export const StreaminProvider = ({ children }: { children: ReactNode }) => {
 };
 
 // Hook customizado para acessar o contexto
-export const useStreaminContext = (): StreamingContextType => {
+export const useStreamingContext = (): StreamingContextType => {
   const context = useContext(StreamingContext);
   if (!context) {
     throw new Error('useArtistContext deve ser usado dentro de um StreamingProvider');

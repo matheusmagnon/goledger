@@ -4,13 +4,13 @@ import React, { useState, useEffect } from 'react';
 import PlaylistItem from './PlaylistItem';
 import * as Dialog from '@radix-ui/react-dialog';
 import { toast } from 'sonner';
-import { useStreaminContext } from '@/context/StreamingContext';
+import { useStreamingContext } from '@/context/StreamingContext';
 import ListContainer from '../components/ListContainer';
 import { FloppyDisk } from 'phosphor-react';
 import MultiSelect from '../components/inputs/MultiSelect';
 
 export default function Artists() {
-  const { songs, fetchSongs, playlists, fetchPlaylists, addPlaylist } = useStreaminContext();
+  const { songs, fetchSongs, playlists, fetchPlaylists, addPlaylist } = useStreamingContext();
   const [name, setName] = useState<string>('');
   // const [selectedSongs, setSelectedSongs] = useState([]);
   const [selectedSongs, setSelectedSongs] = useState<[]>([]);

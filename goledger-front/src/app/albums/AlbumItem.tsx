@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { NotePencil, Trash, FloppyDisk, XCircle } from "phosphor-react";
-import { useStreaminContext } from '@/context/StreamingContext';
+import { useStreamingContext } from '@/context/StreamingContext';
 
 interface ArtistItemProps {
   name: string;
@@ -11,7 +11,7 @@ interface ArtistItemProps {
 }
 
 export default function AlbumItem({ name, year, id }: ArtistItemProps) {
-  const { removeAlbum, fetchAlbum, editAlbum } = useStreaminContext();
+  const { removeAlbum, fetchAlbum, editAlbum } = useStreamingContext();
   const [isEditing, setIsEditing] = useState(false);
   const [newYear, setNewYear] = useState(year);
   const inputRef = useRef<HTMLInputElement | null>(null);

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { NotePencil, Trash, FloppyDisk, XCircle } from "phosphor-react";
-import { useStreaminContext } from '@/context/StreamingContext';
+import { useStreamingContext } from '@/context/StreamingContext';
 import * as Dialog from '@radix-ui/react-dialog';
 import MultiSelect from "../components/inputs/MultiSelect";
 
@@ -17,7 +17,7 @@ interface PlaylistItemProps {
 }
 
 export default function PlaylistItem({ name, isPrivate, id, songsOfPlaylist }: any) {
-  const { removePlaylist, editPlaylist, fetchPlaylists, fetchSongs, songs } = useStreaminContext();
+  const { removePlaylist, editPlaylist, fetchPlaylists, fetchSongs, songs } = useStreamingContext();
   const [isEditing, setIsEditing] = useState(false);
   const [showSongs, setShowSongs] = useState(false);
   const [editedIsPrivate, setEditedIsPrivate] = useState(isPrivate);

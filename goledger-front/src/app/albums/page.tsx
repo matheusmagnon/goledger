@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import AlbumItem from './AlbumItem';
 import * as Dialog from '@radix-ui/react-dialog';
 import { toast } from 'sonner';
-import { useStreaminContext } from '@/context/StreamingContext';
+import { useStreamingContext } from '@/context/StreamingContext';
 import ListContainer from '../components/ListContainer';
 import { FloppyDisk } from 'phosphor-react';
 import SearchInput from '../components/inputs/SearchInput';
@@ -13,7 +13,7 @@ import SearchInput from '../components/inputs/SearchInput';
 // const ErrorMessage = ({ message }: { message: string }) => <div>{message}</div>;
 
 export default function Artists() {
-  const { albums, addAlbum, fetchAlbum, artists, fetchArtists } = useStreaminContext();
+  const { albums, addAlbum, fetchAlbum, artists, fetchArtists } = useStreamingContext();
   // const [isLoading, setIsLoading] = useState<boolean>(true);
   // const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState<string>('');

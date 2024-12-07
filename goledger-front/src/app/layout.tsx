@@ -2,7 +2,7 @@ import { Toaster } from 'sonner';
 import type { Metadata } from 'next';
 import './globals.css';
 import React from 'react';
-import { StreaminProvider } from '../context/StreamingContext';
+import { StreamingProvider } from '../context/StreamingContext';
 import { Container } from './components/Container';
 import { Header } from './components/Header';
 
@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <StreaminProvider>
+    <StreamingProvider>
       <html lang="en">
         <body className="antialiased">
           <Container>
@@ -30,6 +30,6 @@ export default function RootLayout({
         </body>
 
       </html>
-    </StreaminProvider>
+    </StreamingProvider>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Trash, XCircle, CheckCircle } from "phosphor-react";
-import { useStreaminContext } from '@/context/StreamingContext';
+import { useStreamingContext } from '@/context/StreamingContext';
 
 interface SongItemProps {
   name: string;
@@ -11,7 +11,7 @@ interface SongItemProps {
 }
 
 export default function SongItem({ name, AlbumName, id }: SongItemProps) {
-  const { removeSong, playlists, editPlaylist } = useStreaminContext();
+  const { removeSong, playlists, editPlaylist } = useStreamingContext();
   const [isEditing, setIsEditing] = useState(false);
   const [showPlaylistModal, setShowPlaylistModal] = useState(false);
   const [selectedPlaylists, setSelectedPlaylists] = useState<string[]>([]);

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { NotePencil, Trash, FloppyDisk, XCircle } from "phosphor-react";
 import { updateArtist } from "../../services/artistService";
 import { toast } from 'sonner';
-import { useStreaminContext } from '@/context/StreamingContext';
+import { useStreamingContext } from '../../context/StreamingContext';
 
 
 interface ArtistItemProps {
@@ -14,7 +14,7 @@ interface ArtistItemProps {
 }
 
 export default function ArtistItem({ name, country, id }: ArtistItemProps) {
-  const { fetchArtists, removeArtist } = useStreaminContext();
+  const { fetchArtists, removeArtist } = useStreamingContext();
   const [isEditing, setIsEditing] = useState(false);
   const [newCountry, setNewCountry] = useState(country);
   const inputRef = useRef<HTMLInputElement | null>(null);

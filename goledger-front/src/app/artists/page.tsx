@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import ArtistItem from './ArtistItem';
 import * as Dialog from '@radix-ui/react-dialog';
 import { toast } from 'sonner';
-import { useStreaminContext } from '@/context/StreamingContext';
+import { useStreamingContext } from '../../context/StreamingContext';
 import ListContainer from '../components/ListContainer';
 import { FloppyDisk } from 'phosphor-react';
 
@@ -13,7 +13,7 @@ import { FloppyDisk } from 'phosphor-react';
 // const ErrorMessage = ({ message }: { message: string }) => <div>{message}</div>;
 
 export default function Artists() {
-  const { artists, addArtist, fetchArtists } = useStreaminContext();
+  const { artists, addArtist, fetchArtists } = useStreamingContext();
   // const [isLoading, setIsLoading] = useState<boolean>(true);
   // const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState<string>('');
