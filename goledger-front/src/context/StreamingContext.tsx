@@ -1,11 +1,15 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext, useState, useReducer  } from 'react';
 import { toast } from 'sonner';
 import { getArtists, createArtist, deleteArtist } from '../services/artistService';
 import { getAlbums, createAlbum, deleteAlbum, updateAlbum } from '../services/albumsService';
 import { getSongs, createSong, deleteSong } from '../services/songsService';
 import { getPlaylists, deletePlaylist, createPlaylist, updatePlaylist } from '../services/playlistService';
+import { artistReducer } from '@/reducers/artists/reducer';
+import { ArtistActionType } from '@/reducers/artists/actions';
+import { Artist } from '@/reducers/artists/types';
+
 
 type artistSelectedType = {
   name: string;
@@ -33,15 +37,6 @@ type StreamingContextType = {
   editPlaylist: (data: UpdatePlaylistDataType) => void;
 };
 
-type Artist = {
-  '@assetType': string;
-  '@key': string;
-  '@lastTouchBy': string;
-  '@lastTx': string;
-  '@lastUpdated': string;
-  country: string;
-  name: string;
-};
 
 type Album = {
   '@assetType': string;
@@ -103,10 +98,16 @@ type UpdatePlaylistDataType = {
   }[];
 };
 
+interface StreamingProviderProviderProps {
+  children: ReactNode;
+}
+
 const StreamingContext = createContext<StreamingContextType | undefined>(undefined);
 
-export const StreamingProvider = ({ children }: { children: ReactNode }) => {
-  const [artists, setArtists] = useState<Artist[]>([]);
+const initialArtistState: Artist[] = [];
+
+export const StreamingProvider = ({ children }: StreamingProviderProviderProps) => {
+  const [artists, dispatch] = useReducer(artistReducer, initialArtistState);
   const [albums, setAlbums] = useState<Album[]>([]);
   const [songs, setSongs] = useState<SongType[]>([]);
   const [playlists, setPlaylists] = useState<PlaylistType[]>([]);
@@ -116,17 +117,17 @@ export const StreamingProvider = ({ children }: { children: ReactNode }) => {
     try {
       const { result } = await getArtists();
       //   console.log('result', result);
-      setArtists(result); // Atualiza a lista de artistas
+      // setArtists(result); // Atualiza a lista de artistas
+      dispatch({ type: ArtistActionType.FETCH_ARTISTS, payload: result });
     } catch (error) {
       console.error('Erro ao buscar artistas:', error);
     }
   };
 
-  // Função para criar um novo artista
   const addArtist = async (name: string, country: string) => {
     try {
-      await createArtist({ name, country });
-      fetchArtists(); // Atualiza a lista de artistas após a criação
+      const newArtist: Artist = await createArtist({ name, country });
+      dispatch({ type: ArtistActionType.ADD_ARTIST, payload: newArtist });
       toast.success('Artista criado com sucesso!');
     } catch (error) {
       console.error('Erro ao criar o artista:', error);
@@ -136,7 +137,8 @@ export const StreamingProvider = ({ children }: { children: ReactNode }) => {
   const removeArtist = async (key: string) => {
     try {
       await deleteArtist(key);
-      fetchArtists();
+      // fetchArtists();
+      dispatch({ type: ArtistActionType.REMOVE_ARTIST, payload: key });
       toast.success('Artista deletado com sucesso!');
     } catch (error) {
       console.error('Erro ao excluir o artista:', error);

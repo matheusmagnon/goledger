@@ -1,11 +1,6 @@
 // services/artistService.ts
+import { Artist } from '@/reducers/artists/types';
 import apiClient from '../lib/apiClient';
-
-type Artist = {
-  id: string;
-  name: string;
-  country: string;
-};
 
 type CreateArtistData = {
   name: string;
@@ -35,7 +30,7 @@ export const getArtists = async (): Promise<Artist[]> => {
 };
 
 // Função para criar um artista
-export const createArtist = async (artistData: CreateArtistData): Promise<unknown> => {
+export const createArtist = async (artistData: CreateArtistData): Promise<Artist> => {
   console.log('artistData', artistData);
   const response = await apiClient.post('/invoke/createAsset', {
     "asset": [
@@ -46,7 +41,7 @@ export const createArtist = async (artistData: CreateArtistData): Promise<unknow
       }
     ]
   });
-  return response.data;
+  return response.data[0];
 };
 
 // Função para atualizar um artista
