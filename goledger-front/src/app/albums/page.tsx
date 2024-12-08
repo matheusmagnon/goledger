@@ -17,7 +17,7 @@ export default function Artists() {
   // const [isLoading, setIsLoading] = useState<boolean>(true);
   // const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState<string>('');
-  const [artistsSelected, setArtistsSelected] = useState({});
+  const [artistsSelected, setArtistsSelected] = useState<string>('');
   // const [artistsToSelection, setArtistsToSelection] = useState();
   const [country, setCountry] = useState<string>('');
 
@@ -46,9 +46,9 @@ export default function Artists() {
 
   console.log('artistsToSelection', artistsToSelection);
 
-  const handleCreateAlbum = () => {
+  const handleCreateAlbum = async () => {
     if (name && country) {
-      addAlbum(name, country, artistsSelected); // Adiciona o novo artista
+      await addAlbum(name, country, artistsSelected); // Adiciona o novo artista
       setName(''); // Limpa o campo de nome
       setCountry(''); // Limpa o campo de país
     } else {
@@ -94,7 +94,7 @@ export default function Artists() {
               <SearchInput
                 items={artistsToSelection}
                 placeholder="Digite o nome do artista..."
-                onSelect={(selected) => setArtistsSelected(selected)}
+                onSelect={(selected) => setArtistsSelected(selected['@key'])}
               />
             </div>
             <div className="mt-6 flex justify-end">

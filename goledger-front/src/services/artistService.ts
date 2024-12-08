@@ -8,13 +8,6 @@ type CreateArtistData = {
   country: string;
 };
 
-
-
-// type DeleteArtistData = {
-//   '@assetType': string;
-//   '@key': string;
-// };
-
 // Função para obter os artistas
 export const getArtists = async (): Promise<Artist[]> => {
   const { data }: AxiosResponse = await apiClient.post('/query/search', {
@@ -27,9 +20,7 @@ export const getArtists = async (): Promise<Artist[]> => {
   return data.result;
 };
 
-// Função para criar um artista
 export const createArtist = async (artistData: CreateArtistData): Promise<Artist> => {
-  console.log('artistData', artistData);
   const response = await apiClient.post('/invoke/createAsset', {
     "asset": [
       {
@@ -42,9 +33,7 @@ export const createArtist = async (artistData: CreateArtistData): Promise<Artist
   return response.data[0];
 };
 
-// Função para atualizar um artista
 export const updateArtist = async ( artistData: UpdateArtistType): Promise<Artist> => {
-  console.log('artistData', artistData);
   const response = await apiClient.put('/invoke/updateAsset', {
     update: {
       '@assetType': 'artist',
@@ -54,7 +43,6 @@ export const updateArtist = async ( artistData: UpdateArtistType): Promise<Artis
   return response.data;
 };
 
-// Função para excluir um artista
 export const deleteArtist = async (key: string): Promise<Artist> => {
   const response = await apiClient.delete('/invoke/deleteAsset', {
     data: {

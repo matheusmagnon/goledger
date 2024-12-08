@@ -4,7 +4,6 @@ import { Album } from "./types";
 type AlbumState = Album[];
 
 
-// Reducer para gerenciar albums
 export const albumsReducer = (state: AlbumState, action: AlbumAction): AlbumState => {
   switch (action.type) {
     case AlbumActionType.FETCH_ALBUMS:

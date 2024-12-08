@@ -1,10 +1,10 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { StreamingProvider } from '../../context/StreamingContext';
-import Artists from './page'; // ou o caminho correto para o seu componente Artists
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
+import Artists from './page'; // ou o caminho correto para o seu componente Artists
+import { StreamingProvider } from '@/context/StreamingContext';
 
-// Mock of context Streaming
+// Mock do contexto Streaming
 vi.mock('@/context/StreamingContext', () => ({
   useStreamingContext: () => ({
     artists: [
@@ -14,24 +14,20 @@ vi.mock('@/context/StreamingContext', () => ({
     addArtist: vi.fn(() => Promise.resolve()),
     fetchArtists: vi.fn(),
   }),
+  StreamingProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
-// Function to render the component with context
+// Função para renderizar o componente com o contexto
 const renderWithContext = (ui: React.ReactElement) =>
-  render(ui, { wrapper: StreamingProvider });
+  render(ui, { wrapper: (props: { children: React.ReactNode }) => <StreamingProvider {...props} /> });
 
 describe('Artists Page', () => {
   test('should render artists page correctly', async () => {
-    // Renderiza o componente
     renderWithContext(<Artists />);
 
-    // Verifica se o título está presente
     expect(screen.getByText(/Artistas/i)).toBeDefined();
-
     expect(screen.getByText(/Cadastrar artista/i)).toBeDefined();
   });
-
-
 
   test('should show modal to register new artist', async () => {
     renderWithContext(<Artists />);
@@ -39,23 +35,23 @@ describe('Artists Page', () => {
     const button = screen.getByRole('button', { name: /Cadastrar artista/i });
 
     fireEvent.click(button);
-    const modal = screen.getByRole('dialog'); 
-    expect(modal).toBeInTheDocument(); 
+    const modal = screen.getByRole('dialog');
+    expect(modal).toBeInTheDocument();
 
     const inputName = screen.getByPlaceholderText('Nome do artista');
-
     await userEvent.type(inputName, 'Novo Artista');
-
     expect(inputName).toHaveValue('Novo Artista');
 
     const inputCountry = screen.getByPlaceholderText('País do artista');
-
     await userEvent.type(inputCountry, 'Brasil');
-
     expect(inputCountry).toHaveValue('Brasil');
 
     const saveButton = screen.getByRole('button', { name: /salvar/i });
-
     userEvent.click(saveButton);
-  })
+    // const textoNovoArtista = screen.getByText(/Novo Artista/i);
+    // expect(inputName).toBeInTheDocument();
+    await waitFor(() => {
+      expect(inputName).toHaveValue(''); // Verifica se o campo de nome foi limpo
+    });
+  });
 });

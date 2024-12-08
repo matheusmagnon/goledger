@@ -30,9 +30,9 @@ export default function Artists() {
   // Function to handle artist creation
   const handleCreateArtist = () => {
     if (name && country) {
-      addArtist(name, country); // Adiciona o novo artista
-      setName(''); // Limpa o campo de nome
-      setCountry(''); // Limpa o campo de país
+      addArtist(name, country);
+      setName(''); 
+      setCountry(''); 
     } else {
       toast.error('Por favor, preencha todos os campos');
     }

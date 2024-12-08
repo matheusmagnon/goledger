@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useState, useReducer } from 'react';
+import { createContext, ReactNode, useContext, useReducer } from 'react';
 import { toast } from 'sonner';
 import { getArtists, createArtist, deleteArtist, updateArtist } from '../services/artistService';
 import { getAlbums, createAlbum, deleteAlbum, updateAlbum } from '../services/albumsService';
@@ -15,12 +15,9 @@ import { AlbumActionType } from '@/reducers/albums/actions';
 import { songsReducer } from '@/reducers/songs/reducer';
 import { SongType } from '@/reducers/songs/types';
 import { SongActionType } from '@/reducers/songs/actions';
-
-
-type artistSelectedType = {
-  name: string;
-  '@key': string;
-};
+import { CreatePlaylistType, PlaylistType, UpdatePlaylistType } from '@/reducers/playlists/types';
+import { playlistsReducer } from '@/reducers/playlists/reducer';
+import { PlaylistActionType } from '@/reducers/playlists/actions';
 
 type StreamingContextType = {
   artists: Artist[];
@@ -29,7 +26,7 @@ type StreamingContextType = {
   removeArtist: (key: string) => void;
   editArtist: (data: UpdateArtistType) => void;
   fetchAlbum: () => void;
-  addAlbum: (name: string, year: string, artistSelected?: artistSelectedType) => void;
+  addAlbum: (name: string, year: string, artistSelected?: string) => void;
   removeAlbum: (key: string) => void;
   editAlbum: (id: string, year: string) => void;
   albums: Album[];
@@ -40,42 +37,8 @@ type StreamingContextType = {
   playlists: PlaylistType[];
   fetchPlaylists: () => void;
   removePlaylist: (key: string) => void;
-  addPlaylist: (data: CreatePlaylistData) => void;
-  editPlaylist: (data: UpdatePlaylistDataType) => void;
-};
-
-
-type PlaylistType = {
-  '@assetType': string;
-  '@key': string;
-  '@lastTouchBy': string;
-  '@lastTx': string;
-  '@lastUpdated': string;
-  name: string;
-  private: string;
-  songs: [
-    {
-      '@assetType': string;
-      '@key': string;
-    }
-  ];
-
-};
-
-type CreatePlaylistData = {
-  name: string;
-  isPrivate: boolean;
-  selectedSongs?: {
-    '@key': string;
-  }[];
-};
-
-type UpdatePlaylistDataType = {
-  id: string;
-  private?: boolean;
-  songs?: {
-    '@key': string;
-  }[];
+  addPlaylist: (data: CreatePlaylistType) => void;
+  editPlaylist: (data: UpdatePlaylistType) => void;
 };
 
 interface StreamingProviderProviderProps {
@@ -87,14 +50,15 @@ const StreamingContext = createContext<StreamingContextType | undefined>(undefin
 const initialArtistsState: Artist[] = [];
 const initialAlbumsState: Album[] = [];
 const initialSongsState: SongType[] = [];
+const initialPlaylistsState: PlaylistType[] = [];
 
 
 export const StreamingProvider = ({ children }: StreamingProviderProviderProps) => {
   const [artists, dispatchArtist] = useReducer(artistsReducer, initialArtistsState);
   const [albums, dispatchAlbum] = useReducer(albumsReducer, initialAlbumsState);
   const [songs, dispatchSong] = useReducer(songsReducer, initialSongsState);
-  // const [songs, setSongs] = useState<SongType[]>([]);
-  const [playlists, setPlaylists] = useState<PlaylistType[]>([]);
+  const [playlists, dispatchPlaylists] = useReducer(playlistsReducer, initialPlaylistsState);
+  // const [playlists, setPlaylists] = useState<PlaylistType[]>([]);
 
   const fetchArtists = async () => {
     try {
@@ -151,7 +115,7 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
     }
   };
 
-  const addAlbum = async (name: string, year: string, artistSelected: artistSelectedType) => {
+  const addAlbum = async (name: string, year: string, artistSelected: string) => {
     try {
       const newAlbum = await createAlbum({ name, year, artistSelected });
       dispatchAlbum({ type: AlbumActionType.ADD_ALBUM, payload: newAlbum });
@@ -211,7 +175,7 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
 
       const songs = await getSongs();
       const songsWithAlbumNames = songs.map(song => {
-        console.log('album', song.album['@key'])
+        // console.log('album', song.album['@key'])
         const album = albums.find(album => album["@key"] === song.album["@key"]);
         return {
           ...song,
@@ -247,7 +211,6 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
     try {
       await deleteSong(key);
       dispatchSong({ type: SongActionType.REMOVE_SONG, payload: key });
-      // fetchSongs();
       toast.success('Música deletada com sucesso!');
     } catch (error) {
       toast.error(`Não foi possível deletar a música!' 
@@ -257,45 +220,38 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
   };
 
   const fetchPlaylists = async () => {
-
     try {
-      // const  resultSongs  = await getSongs();
-      // console.log('resultSongs', resultSongs);
-      // setSongs(resultSongs.resultSongs);
-
-      const { result } = await getPlaylists();
-      console.log('result playlist', result);
-      const playlistsWithSongNames = result.map(playlist => {
-        const songsWithNames = playlist.songs.map(song => {
-          const songDetails = songs.find(s => s['@key'] === song['@key']);
-
-          if (songDetails) {
-            return { name: songDetails.name, '@key': songDetails['@key'] };
-          } else {
-            return null;
-          }
-        });
-
+      const songs = await getSongs();
+      dispatchSong({ type: SongActionType.FETCH_SONGS, payload: songs });
+  
+      const playlists = await getPlaylists();
+  
+      const playlistsWithSongNames = playlists.map(playlist => {
+        const updatedSongs = playlist.songs?.map(song => {
+          const matchingSong = songs.find(s => s['@key'] === song['@key']);
+          return {
+            ...song,
+            name: matchingSong ? matchingSong.name : "Música Desconhecida",
+          };
+        }) || [];
+  
+        console.log('updatedSongs', updatedSongs);
         return {
           ...playlist,
-          songs: songsWithNames.filter(song => song !== null),
+          songs: updatedSongs,
         };
       });
-
-      console.log('playlistsWithSongNames', playlistsWithSongNames);
-
-      // Update the state with playlists already containing song names
-      setPlaylists(playlistsWithSongNames);
-
+  
+      dispatchPlaylists({ type: PlaylistActionType.FETCH_PLAYLIST, payload: playlistsWithSongNames });
     } catch (error) {
-      console.error('Error fetching playlists:', error);
+      console.error('Erro ao buscar playlists:', error);
     }
   };
-
+  
   const removePlaylist = async (key: string) => {
     try {
       await deletePlaylist(key);
-      fetchPlaylists();
+      dispatchPlaylists({ type: PlaylistActionType.REMOVE_PLAYLIST, payload: key });
       toast.success('Playlist deletada com sucesso!');
     } catch (error) {
       toast.error(`Não foi possível deletar a Playlist!' 
@@ -303,22 +259,23 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
     }
   };
 
-  const editPlaylist = async (UpdatePlaylistData: UpdatePlaylistDataType) => {
+  const editPlaylist = async (UpdatePlaylistData: UpdatePlaylistType) => {
+    console.log('editPlaylist', UpdatePlaylistData);
     try {
       await updatePlaylist(UpdatePlaylistData);
       fetchPlaylists();
+      dispatchPlaylists({ type: PlaylistActionType.UPDATE_PLAYLIST, payload: UpdatePlaylistData });
       toast.success('Playlist editado com sucesso!');
     } catch (error) {
       console.error('Erro ao excluir o Playlist:', error);
     }
   };
 
-  const addPlaylist = async (createPlaylistData: CreatePlaylistData) => {
+  const addPlaylist = async (createPlaylistData: CreatePlaylistType) => {
     console.log('addPlaylist', createPlaylistData);
-    // const {name, isPrivate, selectedSongs} = createPlaylistData 
     try {
-      await createPlaylist(createPlaylistData);
-      fetchPlaylists();
+      const createdPlaylist = await createPlaylist(createPlaylistData);
+      dispatchPlaylists({ type: PlaylistActionType.ADD_PLAYLIST, payload: createdPlaylist });
       toast.success('Playlist criado com sucesso!');
     } catch (error) {
       console.error('Erro ao criar a playlist:', error);

@@ -1,18 +1,18 @@
 'use client';
 
+import { SongType } from '@/reducers/songs/types';
 import React, { useState, useEffect, useRef } from 'react';
 
 interface Item {
   name: string; // Propriedade pelo qual será feita a busca
-  [key: string]: unknown; // Outras propriedades opcionais
+  [key: string]: string; // Outras propriedades opcionais
 }
 
 interface MultiSelectProps {
   items: Item[]; // Lista de itens para seleção
   placeholder?: string; // Placeholder do campo de busca
-  onSelectionChange?: (selectedItems: Item[]) => void; // Callback para o componente pai
+  onSelectionChange?: (selectedItems: SongType[]) => void; // Callback para o componente pai
   resetSelection?: boolean;
-
 }
 
 export default function MultiSelect({
@@ -23,7 +23,7 @@ export default function MultiSelect({
 }: MultiSelectProps) {
   const [query, setQuery] = useState(''); // Texto digitado no campo de busca
   const [filteredItems, setFilteredItems] = useState<Item[]>([]); // Sugestões filtradas
-  const [selectedItems, setSelectedItems] = useState<Item[]>([]); // Itens selecionados
+  const [selectedItems, setSelectedItems] = useState<Son[]>([]); // Itens selecionados
   const [isDropdownVisible, setIsDropdownVisible] = useState(false); // Visibilidade da lista de sugestões
   const containerRef = useRef<HTMLDivElement>(null); // Referência para o componente
 
@@ -91,11 +91,11 @@ export default function MultiSelect({
   };
 
   // Remove um item da lista de selecionados
-  const removeSelectedItem = (item: Item) => {
-    setSelectedItems((prevSelected) =>
-      prevSelected.filter((selected) => selected.name !== item.name)
-    );
-  };
+  // const removeSelectedItem = (item: Item) => {
+  //   setSelectedItems((prevSelected) =>
+  //     prevSelected.filter((selected) => selected.name !== item.name)
+  //   );
+  // };
 
   // Dispara o callback sempre que `selectedItems` mudar
   useEffect(() => {

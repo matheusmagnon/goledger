@@ -15,15 +15,15 @@ type Album = {
   name: string;
 };
 
-type artistSelectedType = {
-  name: string;
-  '@key': string;
-};
+// type artistSelectedType = {
+//   // name: string;
+//   '@key': string;
+// };
 
 type CreateAlbumData = {
   name: string;
   year: string;
-  artistSelected: artistSelectedType;
+  artistSelected: string;
 };
 
 type UpdateAlbumData = {
@@ -51,7 +51,7 @@ export const createAlbum = async (albumData: CreateAlbumData): Promise<Album> =>
         "@assetType": "album",
         "name": name,
         "artist": {
-          "@key": artistSelected['@key'],
+          "@key": artistSelected,
         },
         "year": year
       }

@@ -6,23 +6,30 @@ import { useStreamingContext } from '@/context/StreamingContext';
 import * as Dialog from '@radix-ui/react-dialog';
 import MultiSelect from "../components/inputs/MultiSelect";
 
+
+interface songsOfPlaylist {
+  '@assetType'?: string;
+  '@key': string;
+  name?: string;
+}
 interface PlaylistItemProps {
   id: string;
   name: string;
-  isPrivate: string;
-  songsOfPlaylist?: {
+  isPrivate: boolean;
+  songsOfPlaylist: {
+    '@assetType'?: string;
     '@key': string;
-    name: string;
+    name?: string;
   }[];
 }
 
-export default function PlaylistItem({ name, isPrivate, id, songsOfPlaylist }: any) {
-  const { removePlaylist, editPlaylist, fetchPlaylists, fetchSongs, songs } = useStreamingContext();
+export default function PlaylistItem({ name, isPrivate, id, songsOfPlaylist }: PlaylistItemProps) {
+  const { removePlaylist, editPlaylist, songs } = useStreamingContext();
   const [isEditing, setIsEditing] = useState(false);
   const [showSongs, setShowSongs] = useState(false);
-  const [editedIsPrivate, setEditedIsPrivate] = useState(isPrivate);
+  const [playlistIsPrivate, setPlaylistIsPrivate] = useState<boolean | undefined>(undefined);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [selectedSongs, setSelectedSongs] = useState<[]>([]);
+  const [selectedSongs, setSelectedSongs] = useState<songsOfPlaylist[]>([]);
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
@@ -30,13 +37,13 @@ export default function PlaylistItem({ name, isPrivate, id, songsOfPlaylist }: a
     }
   }, [isEditing]);
 
-  useEffect(() => {
-    fetchPlaylists();
-  }, []);
+  // useEffect(() => {
+  //   fetchPlaylists();
+  // }, []);
 
-  useEffect(() => {
-    fetchSongs();
-  }, []);
+  // useEffect(() => {
+  //   fetchSongs();
+  // }, []);
 
   useEffect(() => {
     // Se houver músicas na playlist, marcar como selecionadas
@@ -47,13 +54,14 @@ export default function PlaylistItem({ name, isPrivate, id, songsOfPlaylist }: a
   }, [songsOfPlaylist]);
 
   const handleSave = async () => {
-    editPlaylist({ id, private: editedIsPrivate, songs: selectedSongs });
+    console.log('selectedSongs', selectedSongs)
+    editPlaylist({ '@key': id, isPrivate: playlistIsPrivate, songs: selectedSongs });
     setIsEditing(false);
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    setEditedIsPrivate(isPrivate); // Resetar para o estado original
+    // setPlaylistIsPrivate(isPrivate); // Resetar para o estado original
   };
 
   const handleDelete = async () => {
@@ -83,9 +91,9 @@ export default function PlaylistItem({ name, isPrivate, id, songsOfPlaylist }: a
           </div>
           <div className="flex items-center justify-between gap-20">
             <div className="flex flex-col items-center">
-              {isPrivate === 'sim' ?
-                <p className="text-customBg text-lg font-bold">Playlist Privada</p> :
-                <p className="text-customBg text-lg font-bold">Playlist Pública</p>
+              {isPrivate  
+              ?  <p className="text-customBg text-lg font-bold">Playlist Privada</p> 
+              :  <p className="text-customBg text-lg font-bold">Playlist Pública</p>
               }
             </div>
             <div className="flex justify-between gap-4">
@@ -104,29 +112,29 @@ export default function PlaylistItem({ name, isPrivate, id, songsOfPlaylist }: a
                   <div className="mt-4">
                     <label className="block text-sm font-semibold">Deseja que a playlist seja privada?</label>
                     <div className="flex gap-10 pt-1">
-                      <label>
-                        <input
-                          className="mr-1"
-                          type="radio"
-                          name="opcao"
-                          value="sim"
-                          checked={editedIsPrivate === 'sim'}
-                          onChange={() => setEditedIsPrivate('sim')}
-                        />
-                        <span className="font-semibold">Sim</span>
-                      </label>
+                    <label>
+                      <input
+                        className="mr-1"
+                        type="radio"
+                        name="opcao"
+                        value="sim"
+                        checked={playlistIsPrivate === true}
+                        onChange={() => setPlaylistIsPrivate(true)}
+                      />
+                      <span className="font-semibold">Sim</span>
+                    </label>
 
-                      <label>
-                        <input
-                          className="mr-1"
-                          type="radio"
-                          name="opcao"
-                          value="nao"
-                          checked={editedIsPrivate === 'nao'}
-                          onChange={() => setEditedIsPrivate('nao')}
-                        />
-                        <span className="font-semibold">Não</span>
-                      </label>
+                    <label>
+                      <input
+                        className="mr-1"
+                        type="radio"
+                        name="opcao"
+                        value="nao"
+                        checked={playlistIsPrivate === false}
+                        onChange={() => setPlaylistIsPrivate(false)}
+                      />
+                      <span className="font-semibold">Não</span>
+                    </label>
                     </div>
                     <MultiSelect
                       items={songsToSelection}

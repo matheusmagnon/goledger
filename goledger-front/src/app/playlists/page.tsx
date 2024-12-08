@@ -8,12 +8,13 @@ import { useStreamingContext } from '@/context/StreamingContext';
 import ListContainer from '../components/ListContainer';
 import { FloppyDisk } from 'phosphor-react';
 import MultiSelect from '../components/inputs/MultiSelect';
+import { SongType } from '@/reducers/songs/types';
 
 export default function Artists() {
-  const { songs, fetchSongs, playlists, fetchPlaylists, addPlaylist } = useStreamingContext();
+  const { songs, playlists, fetchPlaylists, addPlaylist } = useStreamingContext();
   const [name, setName] = useState<string>('');
   // const [selectedSongs, setSelectedSongs] = useState([]);
-  const [selectedSongs, setSelectedSongs] = useState<[]>([]);
+  const [selectedSongs, setSelectedSongs] = useState<SongType[]| undefined>([]);
 
   const [isPrivate, setIsPrivate] = useState<boolean | undefined>(undefined); // Inicializa com 'false'
   const [selectedOption, setSelectedOption] = useState<string>(''); // Estado para armazenar a opção selecionada
@@ -24,32 +25,14 @@ export default function Artists() {
     setIsPrivate(value === 'sim'); // Atualiza o estado isPrivate com base na opção
   };
 
-  const songsToSelection = songs.map((song) => {
-    return {
-      name: song.name,
-      '@key': song['@key']
-    }
-  });
-
-  console.log('selectedItems', selectedSongs)
   useEffect(() => {
     fetchPlaylists();
   }, []);
-  // cons
 
-  useEffect(() => {
-    // fetchPlaylists();
-    fetchSongs();
-  }, []); // Carrega as playlists e músicas ao montar o componente
-
-// ole.log('playlists', playlists);
-  // console.log('songs', songs);
   const handleCreatePlaylist= () => {
-    const updatedSongs = selectedSongs?.map(({ name, ...rest }) => rest);
-
-    console.log(name , isPrivate , updatedSongs)
+    console.log(name , isPrivate , selectedSongs)
     if (name && isPrivate!= undefined ) {
-      addPlaylist({name, isPrivate, selectedSongs:updatedSongs}); // Usa 'isPrivate' ao criar a playlist
+      addPlaylist({name, isPrivate, songs:selectedSongs}); // Usa 'isPrivate' ao criar a playlist
       setName(''); // Limpa o campo de nome
       setIsPrivate(false);
       setSelectedSongs(undefined);
@@ -58,9 +41,6 @@ export default function Artists() {
       toast.error('Por favor, preencha todos os campos');
     }
   };
-
-// console.log('llllll', JSON.stringify(playlists, null, 2));
-
 
   return (
     <div className="min-w-full flex flex-col">
@@ -118,7 +98,7 @@ export default function Artists() {
             <div className="mt-4">
               <label className="block text-sm font-semibold pb-2">Nome da música:</label>
               <MultiSelect
-                items={songsToSelection}
+                items={songs}
                 onSelectionChange={(selected) => setSelectedSongs(selected)}
                 resetSelection={selectedSongs == undefined}
               />
@@ -139,8 +119,13 @@ export default function Artists() {
       </div>
 
       <ListContainer>
-        {playlists?.map((playlist) => (
-          <PlaylistItem key={playlist['@key']} name={playlist.name} isPrivate={playlist.private} id={playlist['@key']} songsOfPlaylist={playlist.songs} />
+        {playlists?.map((playlist, index) => (
+          <PlaylistItem 
+            key={playlist['@key'] || `playlist-${index}`} 
+            name={playlist.name} 
+            isPrivate={playlist.private} 
+            id={playlist['@key']} 
+            songsOfPlaylist={playlist.songs} />
         ))}
       </ListContainer>
     </div>

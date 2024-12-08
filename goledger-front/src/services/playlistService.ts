@@ -1,48 +1,28 @@
+import { CreatePlaylistType, PlaylistType, UpdatePlaylistType } from '@/reducers/playlists/types';
 import apiClient from '../lib/apiClient';
+import { AxiosResponse } from 'axios';
 
-type Playlist = {
-  id: string;
-  name: string;
-  songs: string[];
-  isPrivate: boolean;
-};
-
-type CreatePlaylistData = {
-  name: string;
-  isPrivate: boolean;
-  selectedSongs?: {
-    '@key': string;
-  }[];
-};
-
-type UpdatePlaylistData = {
-  id: string;
-  private: boolean;
-  songs: {
-    '@key': string;
-  }[];
-};
-
-export const getPlaylists = async (): Promise<Playlist[]> => {
-  const response = await apiClient.post('/query/search', {
+export const getPlaylists = async (): Promise<PlaylistType[]> => {
+  const {data}: AxiosResponse = await apiClient.post('/query/search', {
     query: {
       selector: {
         '@assetType': 'playlist',
       },
     },
   });
-  return response.data;
+  return data.result;
 };
 
 
-export const createPlaylist = async (playlistData: CreatePlaylistData): Promise<unknown> => {
+export const createPlaylist = async (playlistData: CreatePlaylistType): Promise<PlaylistType> => {
+  const {name, songs,isPrivate} = playlistData
   const response = await apiClient.post('/invoke/createAsset', {
     "asset": [
       {
         "@assetType": "playlist",
-        "name": playlistData.name,
-        "songs": playlistData.selectedSongs,
-        "private": playlistData.isPrivate,
+        "name": name,
+        "songs": songs,
+        "private": isPrivate,
       }
     ]
   });
@@ -50,13 +30,14 @@ export const createPlaylist = async (playlistData: CreatePlaylistData): Promise<
 };
 
 
-export const updatePlaylist = async (playlistData: UpdatePlaylistData): Promise<unknown> => {
+export const updatePlaylist = async (playlistData: UpdatePlaylistType): Promise<PlaylistType> => {
+  const { isPrivate, songs} = playlistData;
   const response = await apiClient.put('/invoke/updateAsset', {
     update: {
       '@assetType': 'playlist',
-      '@key': playlistData.id,
-      private: playlistData.private,
-      songs:playlistData.songs,
+      '@key': playlistData['@key'],
+      private: isPrivate,
+      songs: songs,
     },
   });
   console.log(' response.data', response.data)
@@ -64,7 +45,7 @@ export const updatePlaylist = async (playlistData: UpdatePlaylistData): Promise<
 };
 
 
-export const deletePlaylist = async (key: string): Promise<unknown> => {
+export const deletePlaylist = async (key: string): Promise<PlaylistType> => {
   const response = await apiClient.delete('/invoke/deleteAsset', {
     data: {
       key: {

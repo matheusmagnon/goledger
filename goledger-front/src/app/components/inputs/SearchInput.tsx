@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 
 interface Item {
   name: string; // Propriedade pelo qual será feita a busca
-  [key: string]: unknown; // Outras propriedades opcionais
+  '@key': string; // Outras propriedades opcionais
 }
 
 interface SearchInputProps {
