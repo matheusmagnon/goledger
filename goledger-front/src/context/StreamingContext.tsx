@@ -186,7 +186,6 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
         };
       });
 
-      console.log('songsWithAlbumNames', songs)
       dispatchSong({ type: SongActionType.FETCH_SONGS, payload: songsWithAlbumNames });
 
     } catch (error) {
