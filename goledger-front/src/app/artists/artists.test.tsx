@@ -1,10 +1,9 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
-import Artists from './page'; // ou o caminho correto para o seu componente Artists
+import Artists from './page';
 import { StreamingProvider } from '@/context/StreamingContext';
 
-// Mock do contexto Streaming
 vi.mock('@/context/StreamingContext', () => ({
   useStreamingContext: () => ({
     artists: [
@@ -17,7 +16,6 @@ vi.mock('@/context/StreamingContext', () => ({
   StreamingProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
-// Função para renderizar o componente com o contexto
 const renderWithContext = (ui: React.ReactElement) =>
   render(ui, { wrapper: (props: { children: React.ReactNode }) => <StreamingProvider {...props} /> });
 
@@ -48,10 +46,9 @@ describe('Artists Page', () => {
 
     const saveButton = screen.getByRole('button', { name: /salvar/i });
     userEvent.click(saveButton);
-    // const textoNovoArtista = screen.getByText(/Novo Artista/i);
-    // expect(inputName).toBeInTheDocument();
+
     await waitFor(() => {
-      expect(inputName).toHaveValue(''); // Verifica se o campo de nome foi limpo
+      expect(inputName).toHaveValue(''); 
     });
   });
 });

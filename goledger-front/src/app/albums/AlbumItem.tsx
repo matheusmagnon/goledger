@@ -18,11 +18,10 @@ export default function AlbumItem({ name, year, id }: ArtistItemProps) {
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
-      inputRef.current.focus(); // Foca no campo
+      inputRef.current.focus(); 
     }
   }, [isEditing]);
 
-  // Função para atualizar o artista
   const handleSave = async () => {
     console.log('id', id)
     console.log('year', newYear)

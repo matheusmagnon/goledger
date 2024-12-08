@@ -4,7 +4,7 @@ import './globals.css';
 import React from 'react';
 import { StreamingProvider } from '../context/StreamingContext';
 import { Container } from './components/Container';
-import { Header } from './components/Header';
+import { Menu } from './components/menu';
 
 export const metadata: Metadata = {
   title: 'GoLeadger Streaming Music',
@@ -23,7 +23,7 @@ export default function RootLayout({
       <html lang="en">
         <body className="antialiased">
           <Container>
-            <Header />
+            < Menu/>
             <main>{children}</main>
           </Container>
           <Toaster />
