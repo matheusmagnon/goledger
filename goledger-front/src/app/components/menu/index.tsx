@@ -5,8 +5,8 @@ import React from 'react';
 
 export function Menu() {
     return (
-        <div className="h-fit flex flex-row justify-between items-center w-4/6 m-w self-center bg-white rounded-full px-8 "
-            style={{ boxShadow: '-1px -1px 4px 1px rgba(255, 255, 255, 0.5)' }}>
+        <div className="flex justify-between items-center w-full lg:w-4/6 bg-white rounded-full px-6 shadow-md m-auto max-w-[1200px]"
+            >
             <Image
                 className="lg:h-14 h-10 object-contain"
                 src={logo}

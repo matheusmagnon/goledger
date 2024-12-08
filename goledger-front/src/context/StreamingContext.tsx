@@ -186,11 +186,9 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
         };
       });
 
-      console.log('songsWithAlbumNames', songsWithAlbumNames)
+      console.log('songsWithAlbumNames', songs)
       dispatchSong({ type: SongActionType.FETCH_SONGS, payload: songsWithAlbumNames });
 
-
-      fetchPlaylists()
     } catch (error) {
       console.error('Erro ao buscar artistas:', error);
     }

@@ -10,7 +10,7 @@ import { FloppyDisk } from 'phosphor-react';
 import MultiSelect from '../components/inputs/MultiSelect';
 import { SongType } from '@/reducers/songs/types';
 
-export default function Artists() {
+export default function Playlist() {
   const { songs, playlists, fetchPlaylists, addPlaylist } = useStreamingContext();
   const [name, setName] = useState<string>('');
   // const [selectedSongs, setSelectedSongs] = useState([]);

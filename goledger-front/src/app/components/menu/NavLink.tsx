@@ -1,7 +1,7 @@
 'use client';
 
 import Link from "next/link";
-import { usePathname } from "next/navigation"; // Usando usePathname do Next.js 13
+import { usePathname } from "next/navigation"; 
 
 interface NavLinkProps {
   text: string;
@@ -9,21 +9,14 @@ interface NavLinkProps {
 }
 
 export function NavLink({ text, href }: NavLinkProps) {
-  const pathname = usePathname(); 
+  const pathname = usePathname();
   const isActive = pathname === href;
 
   return (
-    <Link href={href} passHref className="lg:text2xl text-xl font-bold cursor-pointer relative inline-block group p-1">
-      <span 
-        className={`relative z-10 ${isActive ? "text-slate-950 border-2 border-customBg p-1 rounded-lg" : "text-customBg"} `}
-      >
-        {text}
-      </span>
-      <span 
-        className={`absolute inset-0 border-2 border-transparent transition-all duration-300 transform p-2
-          ${isActive ? "border-customBg" : "group-hover:border-customBg"} 
-          rounded-lg`} 
-      />
+    <Link href={href} passHref className={`relative px-3 py-2 font-semibold rounded-lg transition-colors duration-300 group
+      ${isActive ? "text-white bg-customBg" : "text-slate-700 hover:text-white hover:bg-customBg"}`}>
+        <span>{text}</span>
+
     </Link>
   );
 }

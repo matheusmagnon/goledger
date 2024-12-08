@@ -44,13 +44,15 @@ export default function ArtistItem({ name, country, id }: ArtistItemProps) {
 
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-4 flex flex-col gap-4 w-full sm:w-[220px] md:w-[250px] lg:w-[300px]">
-      <div className="w-full h-40 overflow-hidden rounded-t-lg">
+      <div className="relative w-full h-40 overflow-hidden rounded-t-lg">
         <Image
           src={defaultImage}
           alt={`${name}'s image`}
-          className="w-full h-full object-cover"
+          layout="fill" 
+          objectFit="cover" 
         />
       </div>
+
       <div>
         <p className="text-customBg text-xl font-semibold">{name}</p>
         {isEditing ? (
@@ -66,7 +68,6 @@ export default function ArtistItem({ name, country, id }: ArtistItemProps) {
         )}
       </div>
 
-      {/* Ações de edição e exclusão */}
       <div className="flex items-center gap-2">
         {isEditing ? (
           <>
