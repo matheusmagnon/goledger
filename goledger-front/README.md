@@ -41,7 +41,6 @@ git clone https://github.com/matheusmagnon/goledger.git
 cd goledger/goledger-front/
 ```
 
-
 ## 🚀 Executando o Projeto
 
 Siga as etapas abaixo para executar o projeto:
@@ -54,9 +53,15 @@ npm install
 ```bash
 cp .env.example .env.local
 ```
-Adicione os valores necessários
+Adicione os valores necessários no .env.local
+
 3. Inicie a aplicação localmente. No mesmo diretório, execute o comando:
 ```
 npm run dev
 ```
 4. Abra o seu navegador e acesse `http://localhost:3000` para visualizar o projeto em execução. Verifique também o seu terminal, pois ele pode exibir a porta específica em uso.
+
+5. Caso queira executar os testes unitários:
+```
+npm run test
+```
