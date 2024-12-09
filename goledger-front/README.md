@@ -49,7 +49,7 @@ npm install
 ```
 2. Configure as variáveis de ambiente:
 ```bash
-cp example.env .env
+cp .env.example .env.local
 ```
 Adicione os valores necessários
 3. Inicie a aplicação localmente. No mesmo diretório, execute o comando:
