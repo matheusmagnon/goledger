@@ -12,6 +12,7 @@ export type PlaylistType = {
       '@key': string;
       name?: string;
     }[];
+  cover?: string;
 };
 
 export type CreatePlaylistType = {

@@ -19,12 +19,8 @@ type albumSelectedType = {
 
 export default function Artists() {
   const { songs, fetchSongs, addSong, albums } = useStreamingContext();
-  // const [isLoading, setIsLoading] = useState<boolean>(true);
-  // const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState<string>('');
   const [albumSelected, setAlbumSelected] = useState<albumSelectedType | undefined>(undefined);
-  // const [artistsToSelection, setArtistsToSelection] = useState();
-  // const [country, setCountry] = useState<string>('');
 
 
   const AlbumsToSelection = albums.map((album) => {
@@ -36,14 +32,9 @@ export default function Artists() {
 
   useEffect(() => {
     fetchSongs();
-    // console.log('artists eff', artists)
-  }, []); // O array vazio garante que a requisição seja feita apenas uma vez, após a renderização inicial'
-
-  // if (isLoading) return <Loading />;
-  // if (error) return <ErrorMessage message={error} />;
+  }, []);
 
   const handleCreateSong = () => {
-    // console.log('albumSelected', albumSelected)
     if (name && albumSelected) {
       const albumId = albumSelected['@key']
       addSong(name, String(albumId));
@@ -56,7 +47,7 @@ export default function Artists() {
 
   return (
     <div className="min-w-full flex flex-col">
-      <div className="flex justify-between items-center mt-12">
+      <div className="flex justify-between items-center mt-12 px-4 ">
         <h1 className="text-3xl text-paragraph font-bold">Músicas</h1>
         <Dialog.Root>
           <Dialog.Trigger
@@ -101,7 +92,7 @@ export default function Artists() {
         </Dialog.Root>
       </div>
 
-      <ListContainer>
+      <ListContainer direction='row'>
         {songs?.map((song, index) => (
           <SongItem key={song['@key'] || `song-${index}`} name={song.name} id={song['@key']} AlbumName={song.album?.name} />
         ))

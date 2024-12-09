@@ -1,76 +1,59 @@
+<h1 align="center">Go Leadger Streaming Service </h1>
 
-/* back ground primary #002F39  black blue*/
-/* text paragragh #F2F2F2  white*/
-/* Title #4FC3F7 blue  */
-/* font roboto */
-/* assets logo-fundo branco: https://goledger.com.br/wp-content/uploads/2024/01/goledger-newfont-horizontal-1.png */
+<p align="center">
+  Um sistema para gestão de artistas, álbuns, músicas e playlists. 
+</p>
 
-/* Menu com logo e opções */
+## 💻 Pré-requisitos
 
-/* Cada opção do menu 
-- Artista
-  |__Sem artista, cadastre um artista 
-  |__ Ou, exibe lista de artistas (nome, País de origem, botão ver albums (tempo?)),  
-      na lista deve ter botão de ação para: editar e excluir 
-    |__Botão cadastra novo artista(Nome, pais)
+Antes de começar, certifique-se de ter as seguintes ferramentas instaladas no seu computador:
 
-- Album
-  |__Sem Album, cadastre um Album, necessário ter artista cadastrado  
-  |__ Ou, exibe lista de Albums order by (nome, Ano do album, artista do album), (clica no artista e abre os albums, tempo?)  
-      na lista deve ter botão de ação para: editar(remover ou add musicas) e excluir album 
-    |__Botão cadastra novo Album(Nome, ano, vincular à um artista)
+- [Node.js](https://nodejs.org) (versão v20.15.1 ou superior)
+- npm (geralmente vem com o Node.js)
 
-- Musicas
-  |__Sem Musicas, cadastre uma Musicas, necessário vicular à um Album cadastrado  
-  |__ Ou, exibe lista de Musicas order by (nome, album, artista, ano)  
-      na lista deve ter botão de ação para: editar e excluir Musica, e adicionar à uma playlist 
-    |__Botão cadastra nova Música(Nome, vincular à um Album)
+## 🛠️ Tecnologias Utilizadas
 
-- Playlist
-  |__Sem Playlist, cadastre uma musica, necessário ter musicas cadastradas  
-  |__ Ou, exibe lista de Playlist order by (nome, listar musicas, private?), 
-      na lista deve ter botão de ação para: editar(remover ou add musicas) e excluir Playlist 
-    |__Botão cadastra nova Playlist(Nome, private, músicas)
-- Dashboard (tempo?)
-*/
+O projeto utiliza as seguintes tecnologias:
 
+- Next
+- Vite
+- TypeScript
+- Vitest
+- Testing-library
+- MSW
+- SWC
+- Tailwindcss
+- Axios
+- Radix
+- Sonner
+- Phosphor-react
 
+## ⚙️ Configuração
 
+Siga as instruções abaixo para configurar e executar o projeto:
 
-
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+1. Clone este repositório para o seu ambiente local. Você pode fazer isso executando o seguinte comando no seu terminal:
 ```
+git clone https://github.com/matheusmagnon/goledger.git
+```
+2. Navegue até o diretório do projeto:
+cd goledger-front
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Executando o Projeto
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Siga as etapas abaixo para executar o projeto:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Instale as dependências do projeto. No diretório raiz do projeto, execute o comando:
+```
+npm install
+```
+2. Configure as variáveis de ambiente:
+```bash
+cp example.env .env
+```
+Adicione os valores necessários
+3. Inicie a aplicação localmente. No mesmo diretório, execute o comando:
+```
+npm run dev
+```
+4. Abra o seu navegador e acesse `http://localhost:3000` para visualizar o projeto em execução. Verifique também o seu terminal, pois ele pode exibir a porta específica em uso.

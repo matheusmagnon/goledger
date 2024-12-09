@@ -8,26 +8,15 @@ import { useStreamingContext } from '../../context/StreamingContext';
 import ListContainer from '../components/ListContainer';
 import { FloppyDisk } from 'phosphor-react';
 
-// const Loading = () => <div className='text-white'>Carregando...</div>;
-
-// const ErrorMessage = ({ message }: { message: string }) => <div>{message}</div>;
-
 export default function Artists() {
   const { artists, addArtist, fetchArtists } = useStreamingContext();
-  // const [isLoading, setIsLoading] = useState<boolean>(true);
-  // const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState<string>('');
   const [country, setCountry] = useState<string>('');
 
   useEffect(() => {
     fetchArtists();
-  }, []); // O array vazio garante que a requisição seja feita apenas uma vez, após a renderização inicial'
+  }, []); 
 
-
-  // if (isLoading) return <Loading />;
-  // if (error) return <ErrorMessage message={error} />;
-
-  // Function to handle artist creation
   const handleCreateArtist = () => {
     if (name && country) {
       addArtist(name, country);
@@ -40,7 +29,7 @@ export default function Artists() {
 
   return (
     <div className="min-w-full flex flex-col">
-      <div className="flex justify-between items-center mt-12">
+      <div className="flex justify-between items-center mt-12 px-4">
         <h1 className="text-3xl text-paragraph font-bold">Artistas</h1>
         <Dialog.Root>
           <Dialog.Trigger
@@ -84,7 +73,7 @@ export default function Artists() {
         </Dialog.Root>
       </div>
 
-      <ListContainer>
+      <ListContainer direction='row'>
         {artists.map((artist, index) => (
           <ArtistItem key={artist['@key'] || index} name={artist.name} country={artist.country} id={artist['@key']} />
         ))

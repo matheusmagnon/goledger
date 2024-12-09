@@ -26,7 +26,7 @@ type StreamingContextType = {
   removeArtist: (key: string) => void;
   editArtist: (data: UpdateArtistType) => void;
   fetchAlbum: () => void;
-  addAlbum: (name: string, year: string, artistSelected?: string) => void;
+  addAlbum: (name: string, year: string, keyArtist: string) => void;
   removeAlbum: (key: string) => void;
   editAlbum: (id: string, year: string) => void;
   albums: Album[];
@@ -58,7 +58,6 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
   const [albums, dispatchAlbum] = useReducer(albumsReducer, initialAlbumsState);
   const [songs, dispatchSong] = useReducer(songsReducer, initialSongsState);
   const [playlists, dispatchPlaylists] = useReducer(playlistsReducer, initialPlaylistsState);
-  // const [playlists, setPlaylists] = useState<PlaylistType[]>([]);
 
   const fetchArtists = async () => {
     try {
@@ -76,7 +75,9 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
     try {
       const newArtist: Artist = await createArtist({ name, country });
       dispatchArtist({ type: ArtistActionType.ADD_ARTIST, payload: newArtist });
-      toast.success('Artista criado com sucesso!');
+      toast.success('Artista criado com sucesso!', {
+        position: 'top-right',
+      });
     } catch (error) {
       console.error('Erro ao criar o artista:', error);
     }
@@ -90,7 +91,9 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
       toast.success('Artista deletado com sucesso!');
     } catch (error) {
       console.error('Erro ao excluir o artista:', error);
-      toast.error(`Erro ao excluir o artista ${error}`);
+      toast.error(`Erro ao excluir o artista ${error}`, {
+        position: 'top-right',
+      });
     }
   };
 
@@ -109,18 +112,22 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
           ...artistToUpdate,
         },
       });
-      toast.success('Artista editado com sucesso!');
+      toast.success('Artista editado com sucesso!', {
+        position: 'top-right',
+      });
     } catch (error) {
       console.error('Erro ao editar o Artista:', error);
     }
   };
 
-  const addAlbum = async (name: string, year: string, artistSelected: string) => {
+  const addAlbum = async (name: string, year: string, keyArtist: string) => {
     try {
-      const newAlbum = await createAlbum({ name, year, artistSelected });
+      const newAlbum = await createAlbum({ name, year, keyArtist });
       dispatchAlbum({ type: AlbumActionType.ADD_ALBUM, payload: newAlbum });
       fetchAlbum(); 
-      toast.success('Álbum criado com sucesso!');
+      toast.success('Álbum criado com sucesso!', {
+        position: 'top-right',
+      });
     } catch (error) {
       console.error('Erro ao criar o artista:', error);
     }
@@ -140,7 +147,9 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
       await deleteAlbum(key);
       // fetchAlbum();
       dispatchAlbum({ type: AlbumActionType.REMOVE_ALBUM, payload: key });
-      toast.success('Álbum deletado com sucesso!');
+      toast.success('Álbum deletado com sucesso!', {
+        position: 'top-right',
+      });
     } catch (error) {
       console.error('Erro ao excluir o Álbum:', error);
     }
@@ -161,7 +170,9 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
           year
         },
       });
-      toast.success('Álbum editado com sucesso!');
+      toast.success('Álbum editado com sucesso!', {
+        position: 'top-right',
+      });
     } catch (error) {
       console.error('Erro ao excluir o Álbum:', error);
     }
@@ -198,7 +209,9 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
       const newSong = await createSong({ name, AlbumId });
       dispatchSong({ type: SongActionType.ADD_SONG, payload: newSong });
       fetchSongs(); 
-      toast.success('Música criada com sucesso!');
+      toast.success('Música criada com sucesso!', {
+        position: 'top-right',
+      });
     } catch (error) {
       console.error('Erro ao criar o artista:', error);
     }
@@ -208,10 +221,14 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
     try {
       await deleteSong(key);
       dispatchSong({ type: SongActionType.REMOVE_SONG, payload: key });
-      toast.success('Música deletada com sucesso!');
+      toast.success('Música deletada com sucesso!', {
+        position: 'top-right',
+      });
     } catch (error) {
       toast.error(`Não foi possível deletar a música!' 
-         ${error}`);
+         ${error}`, {
+          position: 'top-right',
+        });
 
     }
   };
@@ -224,20 +241,22 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
       const playlists = await getPlaylists();
   
       const playlistsWithSongNames = playlists.map(playlist => {
+        const defaultImage = `https://picsum.photos/300/200?random=${playlist['@key']}`;
+
         const updatedSongs = playlist.songs?.map(song => {
           const matchingSong = songs.find(s => s['@key'] === song['@key']);
           return {
-            ...song,
+            '@key': song['@key'],
             name: matchingSong ? matchingSong.name : "Música Desconhecida",
           };
-        }) || [];
-  
-        console.log('updatedSongs', updatedSongs);
+        }) || [];  
         return {
           ...playlist,
+          cover: defaultImage,
           songs: updatedSongs,
         };
       });
+      console.log('playlistsWithSongNames', playlistsWithSongNames);
   
       dispatchPlaylists({ type: PlaylistActionType.FETCH_PLAYLIST, payload: playlistsWithSongNames });
     } catch (error) {
@@ -249,10 +268,13 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
     try {
       await deletePlaylist(key);
       dispatchPlaylists({ type: PlaylistActionType.REMOVE_PLAYLIST, payload: key });
+      // fetchPlaylists()
       toast.success('Playlist deletada com sucesso!');
     } catch (error) {
       toast.error(`Não foi possível deletar a Playlist!' 
-         ${error}`);
+         ${error}`, {
+          position: 'top-right',
+        });
     }
   };
 
@@ -262,7 +284,9 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
       await updatePlaylist(UpdatePlaylistData);
       fetchPlaylists();
       dispatchPlaylists({ type: PlaylistActionType.UPDATE_PLAYLIST, payload: UpdatePlaylistData });
-      toast.success('Playlist editado com sucesso!');
+      toast.success('Playlist editado com sucesso!', {
+        position: 'top-right',
+      });
     } catch (error) {
       console.error('Erro ao excluir o Playlist:', error);
     }
@@ -272,8 +296,16 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
     console.log('addPlaylist', createPlaylistData);
     try {
       const createdPlaylist = await createPlaylist(createPlaylistData);
-      dispatchPlaylists({ type: PlaylistActionType.ADD_PLAYLIST, payload: createdPlaylist });
-      toast.success('Playlist criado com sucesso!');
+      const defaultImage = `https://picsum.photos/300/200?random=${createdPlaylist['@key']}`;
+
+      dispatchPlaylists({ type: PlaylistActionType.ADD_PLAYLIST, payload: {
+        ...createdPlaylist, 
+        cover:defaultImage 
+      } });
+      fetchPlaylists()
+      toast.success('Playlist criado com sucesso!', {
+        position: 'top-right',
+      });
     } catch (error) {
       console.error('Erro ao criar a playlist:', error);
     }
@@ -308,7 +340,6 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
   );
 };
 
-// Hook customizado para acessar o contexto
 export const useStreamingContext = (): StreamingContextType => {
   const context = useContext(StreamingContext);
   if (!context) {

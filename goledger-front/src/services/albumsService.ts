@@ -15,15 +15,10 @@ type Album = {
   name: string;
 };
 
-// type artistSelectedType = {
-//   // name: string;
-//   '@key': string;
-// };
-
 type CreateAlbumData = {
   name: string;
   year: string;
-  artistSelected: string;
+  keyArtist: string;
 };
 
 type UpdateAlbumData = {
@@ -44,14 +39,14 @@ export const getAlbums = async (): Promise<Album[]> => {
 
 
 export const createAlbum = async (albumData: CreateAlbumData): Promise<Album> => {
-  const { name, year, artistSelected } = albumData
+  const { name, year, keyArtist } = albumData
   const response = await apiClient.post('/invoke/createAsset', {
     "asset": [
       {
         "@assetType": "album",
         "name": name,
         "artist": {
-          "@key": artistSelected,
+          "@key": keyArtist,
         },
         "year": year
       }
