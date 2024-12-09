@@ -38,7 +38,7 @@ git clone https://github.com/matheusmagnon/goledger.git
 ```
 2. Navegue até o diretório do projeto:
 ```
-cd goledger-front
+cd goledger/goledger-front/
 ```
 
 
