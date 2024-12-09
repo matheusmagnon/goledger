@@ -1,5 +1,5 @@
 import { PlaylistAction, PlaylistActionType } from "./actions";
-import { PlaylistType } from "./types";
+import { PlaylistType } from "@/types/playlist";
 
 type PlaylistsState = PlaylistType[];
 

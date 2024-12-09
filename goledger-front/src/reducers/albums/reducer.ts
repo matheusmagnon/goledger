@@ -1,5 +1,5 @@
 import { AlbumAction, AlbumActionType } from "./actions";
-import { Album } from "./types";
+import { Album } from "@/types/album";
 
 type AlbumState = Album[];
 

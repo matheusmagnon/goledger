@@ -1,4 +1,4 @@
-import { Album, UpdateAlbumType } from "./types";
+import { Album, UpdateAlbumType } from "@/types/album";
 
 // Tipos de ações para o reducer de albums
 export enum AlbumActionType {

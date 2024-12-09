@@ -1,9 +1,9 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
-import ArtistItem from './ArtistItem';
+import ArtistItem from '../ArtistItem';
 import { StreamingProvider } from '@/context/StreamingContext';
+import ArtistAlbum from '../ArtistsAlbum';
 
-// Mock do contexto Streaming
 vi.mock('@/context/StreamingContext', () => ({
   useStreamingContext: () => ({
     artists: [
@@ -16,7 +16,6 @@ vi.mock('@/context/StreamingContext', () => ({
   StreamingProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
-// Função para renderizar o componente com o contexto
 const renderWithContext = (ui: React.ReactElement) =>
   render(ui, { wrapper: (props: { children: React.ReactNode }) => <StreamingProvider {...props} /> });
 
@@ -28,34 +27,39 @@ describe('Tests to edit and delete artist', () => {
     expect(screen.getByText(/Brasil/i)).toBeDefined();
   });
 
-  test('list and edit artist', async () => {
-    renderWithContext(<ArtistItem country="Brazil" id="432" name="Artist Name" key="1" />);
+  test('edit artist', async () => {
+    renderWithContext(<ArtistAlbum artistCountry='Brazil' artistId='432' artistName='Artist NAme 1' key="1" albums={[
+      {
+        "@key": "1",
+        name: "Album 1",
+        year: '2021'
+      }
+    ]} />);
 
-    const editButton = screen.getByRole('button', { name: /Editar/i });
+    const editButton = screen.getByRole('button', { name: /Editar Artista/i });
     fireEvent.click(editButton);
 
-    const inputCountry = screen.getByDisplayValue('Brazil');
+    const inputCountry = screen.getByDisplayValue('');
     fireEvent.change(inputCountry, { target: { value: 'Argentina' } });
 
     const saveButton = screen.getByRole('button', { name: /salvar/i });
     fireEvent.click(saveButton);
 
     await waitFor(() => {
-        const saveButtonAfterSave = screen.queryByRole('button', { name: /salvar/i });
-        expect(saveButtonAfterSave).toBeNull();  // O botão não deve estar mais na tela
-      });
-
+      expect(inputCountry).toHaveValue('');
     });
 
-    test('should delete artist', async () => {
-        renderWithContext(<ArtistItem country="Brazil" id="432" name="Artist Name" key="1" />);
+  });
 
-        const deleteButton = screen.getByRole('button', { name: /Excluir/i });
-        fireEvent.click(deleteButton);
+  test('should delete artist', async () => {
+    renderWithContext(<ArtistItem country="Brazil" id="432" name="Artist Name" key="1" />);
 
-        await waitFor(() => {
-            const saveButtonAfterSave = screen.queryByRole('button', { name: /Brazil/i });
-            expect(saveButtonAfterSave).toBeNull();  // O botão não deve estar mais na tela
-          });
+    const deleteButton = screen.getByRole('button', { name: /Excluir/i });
+    fireEvent.click(deleteButton);
+
+    await waitFor(() => {
+      const saveButtonAfterSave = screen.queryByRole('button', { name: /Brazil/i });
+      expect(saveButtonAfterSave).toBeNull(); 
     });
+  });
 });

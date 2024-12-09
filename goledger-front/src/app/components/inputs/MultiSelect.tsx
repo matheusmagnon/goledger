@@ -4,7 +4,6 @@ import { ItemToSelect } from '@/types/global';
 import React, { useState, useEffect, useRef } from 'react';
 
 
-
 interface MultiSelectProps {
   items: ItemToSelect[]; 
   placeholder?: string; 
@@ -29,9 +28,9 @@ export default function MultiSelect({
   useEffect(() => {
     if (resetSelection) {
       setSelectedItems([]);
-      setQuery(''); // Limpa o campo de busca
-      setFilteredItems([]); // Limpa a lista filtrada
-      setIsDropdownVisible(false); // Fecha o dropdown
+      setQuery(''); 
+      setFilteredItems([]); 
+      setIsDropdownVisible(false);
     }
   }, [resetSelection]);
   
@@ -40,15 +39,15 @@ export default function MultiSelect({
     setQuery(value);
   
     if (!value) {
-      setFilteredItems(items); // Exibe todos os itens se não houver valor na consulta
+      setFilteredItems(items);
     } else {
       const filtered = items.filter((item) =>
         item.name?.toLowerCase().includes(value.toLowerCase())
       );
-      setFilteredItems(filtered); // Atualiza os itens filtrados
+      setFilteredItems(filtered); 
     }
   
-    setIsDropdownVisible(true); // Mostra a lista suspensa
+    setIsDropdownVisible(true);
   };
 
   const handleInputFocus = () => {

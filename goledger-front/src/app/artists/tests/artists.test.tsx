@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { vi } from 'vitest';
 import userEvent from '@testing-library/user-event';
-import Artists from './page';
+import Artists from '../page';
 import { StreamingProvider } from '@/context/StreamingContext';
 
 vi.mock('@/context/StreamingContext', () => ({
@@ -24,13 +24,15 @@ describe('Artists Page', () => {
     renderWithContext(<Artists />);
 
     expect(screen.getByText(/Artistas/i)).toBeDefined();
-    expect(screen.getByText(/Cadastrar artista/i)).toBeDefined();
+    expect(screen.getByRole('button', { name: /clique para adicionar uma artista/i })).toBeDefined();
+
   });
 
   test('should show modal to register new artist', async () => {
     renderWithContext(<Artists />);
 
-    const button = screen.getByRole('button', { name: /Cadastrar artista/i });
+    const button = screen.getByRole('button', { name: /clique para adicionar uma artista/i });
+
 
     fireEvent.click(button);
     const modal = screen.getByRole('dialog');

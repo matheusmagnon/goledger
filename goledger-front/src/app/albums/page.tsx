@@ -121,10 +121,9 @@ export default function Albums() {
           ))}
         </ListContainer>
       ) : (
-        // Exibe os álbuns quando o carregamento terminar
         <ListContainer direction="row">
           {albums?.map((album, index) => (
-            <AlbumItem key={album['@key'] || index} name={album.name} year={album.year} id={album['@key']} isLoading={isLoadingComponents} />
+            <AlbumItem key={album['@key'] || index} name={album.name} year={album.year} id={album['@key']} />
           ))}
         </ListContainer>
       )}

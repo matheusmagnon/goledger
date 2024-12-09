@@ -9,10 +9,9 @@ interface AlbumItemProps {
   name: string;
   year: string;
   id: string;
-  isLoading: boolean; 
 }
 
-export default function AlbumItem({ name, year, id, isLoading }: AlbumItemProps) {
+export default function AlbumItem({ name, year, id }: AlbumItemProps) {
   const { removeAlbum, fetchAlbum, editAlbum } = useStreamingContext();
   const [isEditing, setIsEditing] = useState(false);
   const [newYear, setNewYear] = useState(year);
@@ -43,26 +42,6 @@ export default function AlbumItem({ name, year, id, isLoading }: AlbumItemProps)
   };
 
   const defaultImage = `https://picsum.photos/300/200?random=${id}`;
-  if (isLoading) {
-    return (
-      <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-4 flex flex-col gap-4 w-full sm:w-[220px] md:w-[250px] lg:w-[300px]">
-        {/* Skeleton Image */}
-        <div className="relative w-full h-40 overflow-hidden rounded-t-lg bg-gray-300 animate-pulse"></div>
-
-        {/* Skeleton Text */}
-        <div className="mt-2">
-          <div className="h-6 bg-gray-300 rounded w-3/4 animate-pulse"></div>
-          <div className="h-4 bg-gray-300 rounded w-1/2 animate-pulse mt-2"></div>
-        </div>
-
-        {/* Skeleton Action Buttons */}
-        <div className="flex items-center gap-2 mt-4">
-          <div className="h-10 bg-gray-300 rounded w-1/2 animate-pulse"></div>
-          <div className="h-10 bg-gray-300 rounded w-1/2 animate-pulse"></div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-4 flex flex-col gap-4 w-full sm:w-[220px] md:w-[250px] lg:w-[300px]">

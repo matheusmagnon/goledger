@@ -1,6 +1,6 @@
 
 import { ArtistAction, ArtistActionType } from "./actions";
-import { Artist } from "./types";
+import { Artist } from "@/types/artist";
   
 type ArtistState = Artist[];
 

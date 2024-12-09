@@ -41,7 +41,7 @@ export default function PlaylistItem({ name, isPrivate, id, playlistImage }: Pla
       <div className="absolute top-1/2 right-4 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
         <button
           onClick={handleDelete}
-          className="bg-gray-500 hover:bg-gray-400 cursor-pointer transition-colors p-2 rounded-full flex items-center"
+          className="bg-red-500 hover:bg-red-600 cursor-pointer transition-colors p-2 rounded-full flex items-center"
         >
           <Trash size={20} className="text-white" />
         </button>

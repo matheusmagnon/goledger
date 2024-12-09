@@ -2,83 +2,68 @@
 
 import React, { useState, useEffect } from 'react';
 import ArtistItem from './ArtistItem';
-import * as Dialog from '@radix-ui/react-dialog';
-import { toast } from 'sonner';
 import { useStreamingContext } from '../../context/StreamingContext';
 import ListContainer from '../components/ListContainer';
-import { FloppyDisk } from 'phosphor-react';
+import CreateArtistModal from './Modals/CreateArtistModal';
+import ArtistAlbum from './ArtistsAlbum';
 
 export default function Artists() {
-  const { artists, addArtist, fetchArtists } = useStreamingContext();
-  const [name, setName] = useState<string>('');
-  const [country, setCountry] = useState<string>('');
+  const { artists, fetchArtists } = useStreamingContext();
+  const [selectedArtist, setSelectedArtist] = useState<string | null>(null);
 
   useEffect(() => {
     fetchArtists();
-  }, []); 
+  }, []);
 
-  const handleCreateArtist = () => {
-    if (name && country) {
-      addArtist(name, country);
-      setName(''); 
-      setCountry(''); 
-    } else {
-      toast.error('Por favor, preencha todos os campos');
+  useEffect(() => {
+    if (artists.length > 0 && !selectedArtist) {
+      setSelectedArtist(artists[0]['@key']);
     }
+  }, [artists, selectedArtist]);
+
+  const handleSelectArtist = (artistId: string) => {
+    setSelectedArtist(artistId);
   };
 
+  const selectedArtistData = artists.find((artist) => artist['@key'] === selectedArtist);
+
   return (
-    <div className="min-w-full flex flex-col">
-      <div className="flex justify-between items-center mt-12 px-4">
-        <h1 className="text-3xl text-paragraph font-bold">Artistas</h1>
-        <Dialog.Root>
-          <Dialog.Trigger
-            className="bg-slate-50 hover:bg-slate-600 hover:text-paragraph cursor-pointer transition-colors p-3 rounded-full h-12 flex items-center font-semibold"
-          >
-            Cadastrar artista
-          </Dialog.Trigger>
-          <Dialog.Overlay className="fixed inset-0 bg-black opacity-50 z-40" />
-          <Dialog.Content className="fixed top-1/4 left-1/2 transform -translate-x-1/2 w-96 p-6 bg-white rounded-lg shadow-xl z-50">
-            <Dialog.Title className="text-2xl font-bold">Cadastrar Artista</Dialog.Title>
-            <div className="mt-4">
-              <label className="block text-sm font-semibold">Nome:</label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="mt-2 p-2 w-full border rounded-md"
-                placeholder="Nome do artista"
-              />
-            </div>
-            <div className="mt-4">
-              <label className="block text-sm font-semibold">País:</label>
-              <input
-                type="text"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                className="mt-2 p-2 w-full border rounded-md"
-                placeholder="País do artista"
-              />
-            </div>
-            <div className="mt-6 flex justify-end">
-              <button
-                onClick={handleCreateArtist}
-                className="gap-2 bg-emerald-600 hover:bg-emerald-700 cursor-pointer transition-colors p-3 rounded-full h-12 flex items-center font-medium"
-              ><FloppyDisk size={20} className="text-paragraph" />
-                <span className="text-paragraph">Salvar</span>
-              </button>
-            </div>
-            <Dialog.Close className="absolute top-2 right-2 text-xl cursor-pointer">×</Dialog.Close>
-          </Dialog.Content>
-        </Dialog.Root>
+    <div className="mt-14">
+      <div className="flex items-center">
+        <h1 className="text-3xl text-paragraph font-bold mb-4">Artistas</h1>
+        <CreateArtistModal />
       </div>
 
-      <ListContainer direction='row'>
-        {artists.map((artist, index) => (
-          <ArtistItem key={artist['@key'] || index} name={artist.name} country={artist.country} id={artist['@key']} />
-        ))
-        }
-      </ListContainer>
+      <div className="flex h-screen gap-4">
+        <div className="w-1/3 bg-gray-900 overflow-y-auto rounded-xl">
+          <ListContainer direction="col">
+            {artists.map((artist, index) => (
+              <div
+                key={artist['@key'] || `playlist-${index}`}
+                onClick={() => handleSelectArtist(artist['@key'])}
+                className={`rounded-lg cursor-pointer text-red-900 ${
+                  selectedArtist === artist['@key'] ? 'bg-gray-700' : 'bg-gray-800'
+                }`}
+              >
+                <ArtistItem
+                  key={artist['@key'] || index}
+                  name={artist.name}
+                  country={artist.country}
+                  id={artist['@key']}
+                />
+              </div>
+            ))}
+          </ListContainer>
+        </div>
+        {selectedArtistData && (
+          <ArtistAlbum
+            albums={selectedArtistData.albums}
+            artistName={selectedArtistData.name}
+            artistCountry={selectedArtistData.country}
+            artistId={selectedArtistData['@key']}
+          />
+        )}
+      </div>
     </div>
   );
 }

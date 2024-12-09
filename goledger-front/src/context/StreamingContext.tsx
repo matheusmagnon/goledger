@@ -8,14 +8,14 @@ import { getSongs, createSong, deleteSong } from '../services/songsService';
 import { getPlaylists, deletePlaylist, createPlaylist, updatePlaylist } from '../services/playlistService';
 import { artistsReducer } from '@/reducers/artists/reducer';
 import { ArtistActionType } from '@/reducers/artists/actions';
-import { Artist, UpdateArtistType } from '@/reducers/artists/types';
-import { Album } from '@/reducers/albums/types';
+import { Artist, UpdateArtistType } from '@/types/artist';
+import { Album } from '@/types/album';
 import { albumsReducer } from '@/reducers/albums/reducer';
 import { AlbumActionType } from '@/reducers/albums/actions';
 import { songsReducer } from '@/reducers/songs/reducer';
-import { SongType } from '@/reducers/songs/types';
+import { SongType } from '@/types/song';
 import { SongActionType } from '@/reducers/songs/actions';
-import { CreatePlaylistType, PlaylistType, UpdatePlaylistType } from '@/reducers/playlists/types';
+import { CreatePlaylistType, PlaylistType, UpdatePlaylistType } from '@/types/playlist';
 import { playlistsReducer } from '@/reducers/playlists/reducer';
 import { PlaylistActionType } from '@/reducers/playlists/actions';
 
@@ -61,20 +61,55 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
 
   const fetchArtists = async () => {
     try {
-      const artists = await getArtists()
-      dispatchArtist({ 
-        type: ArtistActionType.FETCH_ARTISTS, 
-        payload: artists 
-      });
+        const albums = await getAlbums();
+        dispatchAlbum({ type: AlbumActionType.FETCH_ALBUMS, payload: albums });
+
+        const songs = await getSongs();
+
+        const artists = await getArtists();
+
+        const artistsWithAlbums = artists.map(artist => {
+            const relatedAlbums = albums.filter(album => album.artist['@key'] === artist['@key']);
+
+            const albumsWithSongs = relatedAlbums.map(album => {
+                const relatedSongs = songs
+                    .filter(song => song.album['@key'] === album['@key'])
+                    .map(song => ({
+                        '@key': song['@key'],
+                        name: song.name,
+                    }));
+
+                return {
+                    '@key': album['@key'],
+                    name: album.name,
+                    year: album.year,
+                    songs: relatedSongs, 
+                };
+            });
+
+            return {
+                ...artist,
+                albums: albumsWithSongs, 
+            };
+        });
+
+        console.log('artistsWithAlbums', artistsWithAlbums);
+
+        dispatchArtist({
+            type: ArtistActionType.FETCH_ARTISTS,
+            payload: artistsWithAlbums,
+        });
     } catch (error) {
-      console.error('Erro ao buscar artistas:', error);
+        console.error('Erro ao buscar artistas:', error);
     }
-  };
+};
+
 
   const addArtist = async (name: string, country: string) => {
     try {
       const newArtist: Artist = await createArtist({ name, country });
       dispatchArtist({ type: ArtistActionType.ADD_ARTIST, payload: newArtist });
+      fetchArtists();
       toast.success('Artista criado com sucesso!', {
         position: 'top-right',
       });
@@ -86,7 +121,6 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
   const removeArtist = async (key: string) => {
     try {
       await deleteArtist(key);
-      // fetchArtists();
       dispatchArtist({ type: ArtistActionType.REMOVE_ARTIST, payload: key });
       toast.success('Artista deletado com sucesso!');
     } catch (error) {
@@ -145,7 +179,6 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
   const removeAlbum = async (key: string) => {
     try {
       await deleteAlbum(key);
-      // fetchAlbum();
       dispatchAlbum({ type: AlbumActionType.REMOVE_ALBUM, payload: key });
       toast.success('Álbum deletado com sucesso!', {
         position: 'top-right',
@@ -186,7 +219,6 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
 
       const songs = await getSongs();
       const songsWithAlbumNames = songs.map(song => {
-        // console.log('album', song.album['@key'])
         const album = albums.find(album => album["@key"] === song.album["@key"]);
         return {
           ...song,
@@ -268,7 +300,6 @@ export const StreamingProvider = ({ children }: StreamingProviderProviderProps) 
     try {
       await deletePlaylist(key);
       dispatchPlaylists({ type: PlaylistActionType.REMOVE_PLAYLIST, payload: key });
-      // fetchPlaylists()
       toast.success('Playlist deletada com sucesso!');
     } catch (error) {
       toast.error(`Não foi possível deletar a Playlist!' 

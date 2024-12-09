@@ -1,4 +1,4 @@
-import { SongType, UpdateSongType } from "./types";
+import { SongType, UpdateSongType } from "@/types/song";
 
 export enum SongActionType {
   FETCH_SONGS = 'FETCH_SONGS',

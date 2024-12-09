@@ -1,4 +1,4 @@
-import { PlaylistType, UpdatePlaylistType } from "./types";
+import { PlaylistType, UpdatePlaylistType } from "@/types/playlist";
 
 export enum PlaylistActionType {
   FETCH_PLAYLIST = 'FETCH_PLAYLIST',

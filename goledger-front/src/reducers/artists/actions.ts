@@ -1,4 +1,4 @@
-import { Artist, UpdateArtistType } from "./types";
+import { Artist, UpdateArtistType } from "@/types/artist";
 
 // Tipos de ações para o reducer
 export enum ArtistActionType {

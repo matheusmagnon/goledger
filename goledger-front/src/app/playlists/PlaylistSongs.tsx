@@ -24,7 +24,7 @@ export default function PlaylistSongs({
 }: PlaylistSongsProps) {
     const { editPlaylist, songs } = useStreamingContext();
     const [isEditing, setIsEditing] = useState(false);
-    const [loadingSongKey, setLoadingSongKey] = useState<string | null>(null); // Estado para controlar o carregamento
+    const [loadingSongKey, setLoadingSongKey] = useState<string | null>(null); 
     const inputRef = useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
@@ -34,13 +34,13 @@ export default function PlaylistSongs({
     }, [isEditing]);
 
     const handleDeleteSong = (songKey: string) => {
-        setLoadingSongKey(songKey); 
+        setLoadingSongKey(songKey);
         const updatedSongs = songsOfPlaylist?.filter((song) => song['@key'] !== songKey);
-        
+
         editPlaylist({ '@key': playlistId, isPrivate, songs: updatedSongs });
         setTimeout(() => {
-        setLoadingSongKey(null); 
-        }, 3000); 
+            setLoadingSongKey(null);
+        }, 3000);
     };
 
     const songsToSelection = songs
@@ -51,6 +51,7 @@ export default function PlaylistSongs({
             name: song.name,
             '@key': song['@key']
         }));
+        const defaultImage = `https://picsum.photos/300/200?random=${playlistId}`;
 
     return (
         <div className="w-2/3 bg-gray-100 flex flex-col p-4 overflow-y-auto rounded-xl">
@@ -90,22 +91,34 @@ export default function PlaylistSongs({
                         songsOfPlaylist={songsOfPlaylist}
                     />
 
-                    <ul className="mt-4">
+                    <ul className="mt-6 space-y-4">
                         {songsOfPlaylist?.map((song) => (
                             <li
                                 key={song['@key']}
-                                className="p-2 mb-2 bg-gray-200 rounded-lg flex justify-between items-center"
+                                className="flex items-center justify-between p-4 bg-white shadow-md rounded-lg border border-gray-200 hover:shadow-lg transition-shadow"
                             >
-                                <span>{song.name}</span>
+                                <div className="flex items-center gap-4">
+                                    <div className=" flex items-center justify-center bg-slate-700 rounded-full">
+                                        <Image
+                                            src={defaultImage}
+                                            className="w-16 h-16 object-cover rounded-md"
+                                            width={64}
+                                            height={64} alt={''}                                    />
+                                    </div>
+                                    <div>
+                                        <p className="text-lg font-semibold text-gray-800">{song.name}</p>
+                                    </div>
+                                </div>
+
                                 <button
                                     onClick={() => handleDeleteSong(song['@key'])}
-                                    className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 flex items-center justify-center"
+                                    className="flex items-center justify-center w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors"
                                     title="Excluir música"
                                 >
                                     {loadingSongKey === song['@key'] ? (
-                                        <CircleNotch className="animate-spin" weight='bold' color='white' />
+                                        <CircleNotch className="animate-spin" weight="bold" color="white" size={20} />
                                     ) : (
-                                        <Trash weight='bold' />
+                                        <Trash weight="bold" size={20} />
                                     )}
                                 </button>
                             </li>

@@ -1,5 +1,5 @@
 import { SongAction, SongActionType } from "./actions";
-import { SongType } from "./types";
+import { SongType } from "@/types/song";
 
 type SongState = SongType[];
 

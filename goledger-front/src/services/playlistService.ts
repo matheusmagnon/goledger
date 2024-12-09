@@ -1,4 +1,4 @@
-import { CreatePlaylistType, PlaylistType, UpdatePlaylistType } from '@/reducers/playlists/types';
+import { CreatePlaylistType, PlaylistType, UpdatePlaylistType } from '@/reducers/playlists/type';
 import apiClient from '../lib/apiClient';
 import { AxiosResponse } from 'axios';
 
